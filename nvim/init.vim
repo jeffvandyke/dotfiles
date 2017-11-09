@@ -1,10 +1,10 @@
-" vim-plug
+" Jeff VanDyke's init.vim
 
 set tabstop=4
 set shiftwidth=4
 set expandtab
 
-" ---- Plugins -----------------------------------------------------------------
+" ---- vim-plug plugins --------------------------------------------------------
 
 if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
   silent !curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs
@@ -28,4 +28,4 @@ let g:ale_fixers = {
 
 call plug#end()
 
-" ---- End Plugins -------------------------------------------------------------
+" ---- end plugins -------------------------------------------------------------
