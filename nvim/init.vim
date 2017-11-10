@@ -4,6 +4,8 @@ set tabstop=4
 set shiftwidth=4
 set expandtab
 
+set mouse=a
+
 " ---- vim-plug plugins --------------------------------------------------------
 
 if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
