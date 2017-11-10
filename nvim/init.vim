@@ -30,6 +30,7 @@ let g:ale_fixers = {
             \}
 
 Plug 'ctrlpvim/ctrlp.vim'
+let g:ctrlp_custom_ignore = 'node_modules\|git'
 
 Plug 'scrooloose/nerdtree'
 map <C-n> :NERDTreeToggle<CR>
