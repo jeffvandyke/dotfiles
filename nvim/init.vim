@@ -31,6 +31,13 @@ let g:ale_fixers = {
 
 Plug 'ctrlpvim/ctrlp.vim'
 
+Plug 'scrooloose/nerdtree'
+map <C-n> :NERDTreeToggle<CR>
+" close vi if the only window left open is a NERDTree
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+Plug 'Xuyuanp/nerdtree-git-plugin'
+
 call plug#end()
 
 " ---- end plugins -------------------------------------------------------------
