@@ -14,9 +14,12 @@ endif
 
 call plug#begin('~/.local/share/nvim/plugged')
 
+" much better stuff for javascript
+
 Plug 'pangloss/vim-javascript'
 let g:javascript_plugin_jsdoc = 1
 
+" detect jsx and be smart about it, works with vim-javascript, I think.
 Plug 'mxw/vim-jsx'
 
 Plug 'tpope/vim-sleuth'
@@ -25,6 +28,8 @@ Plug 'w0rp/ale'
 let g:ale_fixers = {
             \   'javascript': ['eslint'],
             \}
+
+Plug 'ctrlpvim/ctrlp.vim'
 
 call plug#end()
 
