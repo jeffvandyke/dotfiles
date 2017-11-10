@@ -14,20 +14,8 @@ endif
 
 call plug#begin('~/.local/share/nvim/plugged')
 
-" much better stuff for javascript
-
-Plug 'pangloss/vim-javascript'
-let g:javascript_plugin_jsdoc = 1
-
-" detect jsx and be smart about it, works with vim-javascript, I think.
-Plug 'mxw/vim-jsx'
-
+" Detect tab/space indentation
 Plug 'tpope/vim-sleuth'
-
-Plug 'w0rp/ale'
-let g:ale_fixers = {
-            \   'javascript': ['eslint'],
-            \}
 
 Plug 'ctrlpvim/ctrlp.vim'
 let g:ctrlp_custom_ignore = 'node_modules\|git'
@@ -37,8 +25,26 @@ map <C-n> :NERDTreeToggle<CR>
 " close vi if the only window left open is a NERDTree
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
+" ---- Javascript ---------------------
+
+Plug 'pangloss/vim-javascript'
+let g:javascript_plugin_jsdoc = 1
+
+" detect jsx and be smart about it, works with vim-javascript, I think.
+Plug 'mxw/vim-jsx'
+
+" ---- C++ -----------------------------
+
+Plug 'ludovicchabant/vim-gutentags'
+
+" ---- (all languages) -----------------
+
+" linter
+Plug 'w0rp/ale'
+let g:ale_fixers = {
+            \   'javascript': ['eslint'],
+            \}
+
 Plug 'Xuyuanp/nerdtree-git-plugin'
 
 call plug#end()
-
-" ---- end plugins -------------------------------------------------------------
