@@ -46,7 +46,8 @@ Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 let g:deoplete#enable_at_startup = 1
 
 " deoplete backend for javascript
-Plug 'carlitux/deoplete-ternjs'
+Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
+
 
 " improve javascript highlighting and syntax support
 Plug 'pangloss/vim-javascript'
