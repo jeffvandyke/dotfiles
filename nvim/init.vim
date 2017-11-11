@@ -6,6 +6,9 @@ set expandtab
 
 set mouse=a
 
+" autoload changes
+set autoread
+
 " ---- vim-plug plugins --------------------------------------------------------
 
 if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
