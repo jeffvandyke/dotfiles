@@ -27,19 +27,10 @@ map <C-n> :NERDTreeToggle<CR>
 " close vi if the only window left open is a NERDTree
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
-" ---- Javascript ---------------------
+Plug 'Xuyuanp/nerdtree-git-plugin'
 
-Plug 'pangloss/vim-javascript'
-let g:javascript_plugin_jsdoc = 1
-
-" detect jsx and be smart about it, works with vim-javascript, I think.
-Plug 'mxw/vim-jsx'
-
-" ---- C++ -----------------------------
-
+" Tags management
 Plug 'ludovicchabant/vim-gutentags'
-
-" ---- (all languages) -----------------
 
 " linter
 Plug 'w0rp/ale'
@@ -47,6 +38,12 @@ let g:ale_fixers = {
             \   'javascript': ['eslint'],
             \}
 
-Plug 'Xuyuanp/nerdtree-git-plugin'
+" ---- Javascript ---------------------
+
+Plug 'pangloss/vim-javascript'
+let g:javascript_plugin_jsdoc = 1
+
+" detect jsx and be smart about it, works with vim-javascript, I think.
+Plug 'mxw/vim-jsx'
 
 call plug#end()
