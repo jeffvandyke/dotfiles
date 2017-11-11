@@ -39,8 +39,13 @@ let g:ale_fixers = {
             \}
 let g:ale_javascript_eslint_executable='eslint_d'
 
-" ---- Javascript ---------------------
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+let g:deoplete#enable_at_startup = 1
 
+" deoplete backend for javascript
+Plug 'carlitux/deoplete-ternjs'
+
+" improve javascript highlighting and syntax support
 Plug 'pangloss/vim-javascript'
 let g:javascript_plugin_jsdoc = 1
 
