@@ -37,6 +37,7 @@ Plug 'w0rp/ale'
 let g:ale_fixers = {
             \   'javascript': ['eslint'],
             \}
+let g:ale_javascript_eslint_executable='eslint_d'
 
 " ---- Javascript ---------------------
 
