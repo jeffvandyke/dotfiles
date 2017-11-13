@@ -8,6 +8,9 @@ set mouse=a
 
 " autoload changes
 set autoread
+au FocusGained,BufEnter * :silent! !
+" save on focus lost
+au FocusLost,BufLeave * :silent! w
 
 " ---- vim-plug plugins --------------------------------------------------------
 
@@ -19,8 +22,14 @@ endif
 
 call plug#begin('~/.local/share/nvim/plugged')
 
+" ---- Single-file editing tools -------
+
 " Detect tab/space indentation
 Plug 'tpope/vim-sleuth'
+" Fix stupid trailing whitespace
+Plug 'bronson/vim-trailing-whitespace'
+
+" ---- Multi-file level tools ----------
 
 Plug 'ctrlpvim/ctrlp.vim'
 let g:ctrlp_custom_ignore = 'node_modules\|git'
@@ -31,6 +40,8 @@ map <C-n> :NERDTreeToggle<CR>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 Plug 'Xuyuanp/nerdtree-git-plugin'
+
+" ---- Language-intelligent tools ------
 
 " Tags management
 Plug 'ludovicchabant/vim-gutentags'
