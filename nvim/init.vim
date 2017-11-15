@@ -12,6 +12,11 @@ au FocusGained,BufEnter * :silent! !
 " save on focus lost
 au FocusLost,BufLeave * :silent! w
 
+" ---- digraphs ----------------------------------------------------------------
+"digraphs use decimal encoding
+
+dig y^ 375
+
 " ---- vim-plug plugins --------------------------------------------------------
 
 if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
@@ -58,6 +63,9 @@ let g:deoplete#enable_at_startup = 1
 
 " deoplete backend for javascript
 Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
+let g:deoplete#sources#ternjs#docs = 1
+let g:deoplete#sources#ternjs#depths = 1
+let g:deoplete#sources#ternjs#types = 1
 
 
 " improve javascript highlighting and syntax support
