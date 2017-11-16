@@ -40,7 +40,16 @@ Plug 'ctrlpvim/ctrlp.vim'
 let g:ctrlp_custom_ignore = 'node_modules\|git'
 
 Plug 'scrooloose/nerdtree'
-map <C-n> :NERDTreeToggle<CR>
+" Open NERDTree in the directory of the current file (or /home if no file is open)
+nmap <silent> <C-n> :call NERDTreeToggleInCurDir()<cr>
+function! NERDTreeToggleInCurDir()
+  " If NERDTree is open in the current buffer
+  if (exists("t:NERDTreeBufName") && bufwinnr(t:NERDTreeBufName) != -1)
+    exe ":NERDTreeClose"
+  else
+    exe ":NERDTreeFind"
+  endif
+endfunction
 " close vi if the only window left open is a NERDTree
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
