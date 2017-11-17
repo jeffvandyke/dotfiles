@@ -37,7 +37,7 @@ Plug 'bronson/vim-trailing-whitespace'
 " ---- Multi-file level tools ----------
 
 Plug 'ctrlpvim/ctrlp.vim'
-let g:ctrlp_custom_ignore = 'node_modules\|git'
+let g:ctrlp_custom_ignore = 'node_modules\|.git$\|\.o$'
 
 Plug 'scrooloose/nerdtree'
 " Open NERDTree in the directory of the current file (or /home if no file is open)
