@@ -46,8 +46,10 @@ function! NERDTreeToggleInCurDir()
   " If NERDTree is open in the current buffer
   if (exists("t:NERDTreeBufName") && bufwinnr(t:NERDTreeBufName) != -1)
     exe ":NERDTreeClose"
-  else
+  elseif bufname('%') != ''
     exe ":NERDTreeFind"
+  else
+    exe ":NERDTree"
   endif
 endfunction
 " close vi if the only window left open is a NERDTree
