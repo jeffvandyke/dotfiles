@@ -85,5 +85,6 @@ let g:javascript_plugin_jsdoc = 1
 
 " detect jsx and be smart about it, works with vim-javascript, I think.
 Plug 'mxw/vim-jsx'
+let g:jsx_ext_required = 0 " Allow JSX in normal JS files
 
 call plug#end()
