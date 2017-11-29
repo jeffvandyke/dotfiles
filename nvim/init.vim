@@ -57,6 +57,9 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 
 Plug 'Xuyuanp/nerdtree-git-plugin'
 
+Plug 'mileszs/ack.vim'
+let g:ackprg = 'rg --vimgrep'
+
 " ---- Language-intelligent tools ------
 
 " Tags management
