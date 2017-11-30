@@ -71,6 +71,8 @@ let g:ale_fixers = {
             \   'javascript': ['eslint'],
             \}
 let g:ale_javascript_eslint_executable='eslint_d'
+nmap <silent> <leader>aj :ALENext<cr>
+nmap <silent> <leader>ak :ALEPrevious<cr>
 
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 let g:deoplete#enable_at_startup = 1
