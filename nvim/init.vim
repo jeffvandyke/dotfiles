@@ -92,4 +92,6 @@ let g:javascript_plugin_jsdoc = 1
 Plug 'mxw/vim-jsx'
 let g:jsx_ext_required = 0 " Allow JSX in normal JS files
 
+Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
+
 call plug#end()
