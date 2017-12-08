@@ -6,6 +6,9 @@ set expandtab
 
 set mouse=a
 
+"terminal-input
+tnoremap <Esc> <C-\><C-n>
+
 " autoload changes
 set autoread
 au FocusGained,BufEnter * :silent! !
@@ -14,7 +17,6 @@ au FocusLost,BufLeave * :silent! w
 
 " ---- digraphs ----------------------------------------------------------------
 "digraphs use decimal encoding
-
 dig y^ 375
 
 " ---- vim-plug plugins --------------------------------------------------------
@@ -26,6 +28,10 @@ if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
 endif
 
 call plug#begin('~/.local/share/nvim/plugged')
+
+" ---- Global settings -----------------
+Plug 'altercation/vim-colors-solarized'
+set background=dark
 
 " ---- Single-file editing tools -------
 
@@ -57,6 +63,8 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 
 Plug 'Xuyuanp/nerdtree-git-plugin'
 
+Plug 'tpope/vim-fugitive'
+
 Plug 'mileszs/ack.vim'
 let g:ackprg = 'rg --vimgrep'
 
@@ -64,12 +72,13 @@ let g:ackprg = 'rg --vimgrep'
 
 " Tags management
 Plug 'ludovicchabant/vim-gutentags'
+nmap <C-]> g<C-]>
 
 " linter
 Plug 'w0rp/ale'
 let g:ale_fixers = {
-            \   'javascript': ['eslint'],
-            \}
+      \   'javascript': ['eslint'],
+      \}
 let g:ale_javascript_eslint_executable='eslint_d'
 nmap <silent> <leader>aj :ALENext<cr>
 nmap <silent> <leader>ak :ALEPrevious<cr>
@@ -95,3 +104,6 @@ let g:jsx_ext_required = 0 " Allow JSX in normal JS files
 Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
 
 call plug#end()
+
+" doesn't work inside plug#begin() ... plug#end()
+colorscheme solarized
