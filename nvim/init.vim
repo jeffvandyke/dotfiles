@@ -40,6 +40,8 @@ Plug 'tpope/vim-sleuth'
 " Fix stupid trailing whitespace
 Plug 'bronson/vim-trailing-whitespace'
 
+Plug 'tpope/vim-surround'
+
 " ---- Multi-file level tools ----------
 
 Plug 'ctrlpvim/ctrlp.vim'
