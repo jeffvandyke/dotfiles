@@ -52,7 +52,7 @@ Plug 'scrooloose/nerdtree'
 nmap <silent> <C-n> :call NERDTreeToggleInCurDir()<cr>
 function! NERDTreeToggleInCurDir()
   " If NERDTree is open in the current buffer
-  if (exists("t:NERDTreeBufName") && bufwinnr(t:NERDTreeBufName) != -1)
+  if (exists("b:NERDTree"))
     exe ":NERDTreeClose"
   elseif bufname('%') != ''
     exe ":NERDTreeFind"
