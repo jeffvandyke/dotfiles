@@ -6,6 +6,9 @@ set expandtab
 
 set mouse=a
 
+" show live preview of :s command
+set inccommand=nosplit
+
 "terminal-input
 tnoremap <Esc> <C-\><C-n>
 
