@@ -43,6 +43,8 @@ Plug 'tpope/vim-sleuth'
 Plug 'bronson/vim-trailing-whitespace'
 
 Plug 'tpope/vim-surround'
+" Allow vim-surround to use '.' for commands
+Plug 'tpope/vim-repeat'
 
 " ---- Multi-file level tools ----------
 
