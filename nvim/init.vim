@@ -33,13 +33,12 @@ endif
 call plug#begin('~/.local/share/nvim/plugged')
 
 " ---- Global settings -----------------
-Plug 'altercation/vim-colors-solarized'
-set background=dark
 
 " ---- Single-file editing tools -------
 
 " Detect tab/space indentation
 Plug 'tpope/vim-sleuth'
+
 " Fix stupid trailing whitespace
 Plug 'bronson/vim-trailing-whitespace'
 
@@ -109,6 +108,3 @@ let g:jsx_ext_required = 0 " Allow JSX in normal JS files
 Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
 
 call plug#end()
-
-" doesn't work inside plug#begin() ... plug#end()
-colorscheme solarized
