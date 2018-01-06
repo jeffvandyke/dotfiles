@@ -51,6 +51,8 @@ Plug 'tpope/vim-repeat'
 Plug 'ctrlpvim/ctrlp.vim'
 let g:ctrlp_custom_ignore = 'node_modules\|.git$\|\.o$'
 
+Plug 'junegunn/fzf.vim'
+
 Plug 'scrooloose/nerdtree'
 " Open NERDTree in the directory of the current file (or /home if no file is open)
 nmap <silent> <C-n> :call NERDTreeToggleInCurDir()<cr>
