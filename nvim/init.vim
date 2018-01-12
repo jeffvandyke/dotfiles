@@ -32,7 +32,9 @@ endif
 
 call plug#begin('~/.local/share/nvim/plugged')
 
-" ---- Global settings -----------------
+" ---- General Tools -------------------
+
+Plug 'tpope/vim-unimpaired'
 
 " ---- Multi-file level tools ----------
 
