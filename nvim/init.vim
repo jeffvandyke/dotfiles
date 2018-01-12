@@ -34,18 +34,6 @@ call plug#begin('~/.local/share/nvim/plugged')
 
 " ---- Global settings -----------------
 
-" ---- Single-file editing tools -------
-
-" Detect tab/space indentation
-Plug 'tpope/vim-sleuth'
-
-" Fix stupid trailing whitespace
-Plug 'bronson/vim-trailing-whitespace'
-
-Plug 'tpope/vim-surround'
-" Allow vim-surround to use '.' for commands
-Plug 'tpope/vim-repeat'
-
 " ---- Multi-file level tools ----------
 
 Plug 'ctrlpvim/ctrlp.vim'
@@ -75,6 +63,18 @@ Plug 'tpope/vim-fugitive'
 
 Plug 'mileszs/ack.vim'
 let g:ackprg = 'rg --vimgrep'
+
+" ---- Single-file editing tools -------
+
+" Detect tab/space indentation
+Plug 'tpope/vim-sleuth'
+
+" Fix stupid trailing whitespace
+Plug 'bronson/vim-trailing-whitespace'
+
+Plug 'tpope/vim-surround'
+" Allow vim-surround to use '.' for commands
+Plug 'tpope/vim-repeat'
 
 " ---- Language-intelligent tools ------
 
