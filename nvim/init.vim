@@ -105,7 +105,6 @@ let g:deoplete#sources#ternjs#docs = 1
 let g:deoplete#sources#ternjs#depths = 1
 let g:deoplete#sources#ternjs#types = 1
 
-
 " improve javascript highlighting and syntax support
 Plug 'pangloss/vim-javascript'
 let g:javascript_plugin_jsdoc = 1
