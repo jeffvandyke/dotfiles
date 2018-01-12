@@ -84,6 +84,9 @@ Plug 'tpope/vim-repeat'
 Plug 'ludovicchabant/vim-gutentags'
 nmap <C-]> g<C-]>
 
+Plug 'majutsushi/tagbar'
+map <C-b> :TagbarToggle<cr>
+
 " linter
 Plug 'w0rp/ale'
 let g:ale_fixers = {
