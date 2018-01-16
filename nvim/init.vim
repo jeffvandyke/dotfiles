@@ -17,6 +17,10 @@ set autoread
 au FocusGained,BufEnter * :silent! !
 " save on focus lost
 au FocusLost,BufLeave * :silent! w
+set autowriteall
+
+" Auto-resize windows when host window is resized
+autocmd VimResized * wincmd =
 
 " ---- digraphs ----------------------------------------------------------------
 "digraphs use decimal encoding
