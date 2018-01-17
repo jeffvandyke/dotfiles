@@ -46,6 +46,10 @@ endif
 
 call plug#begin(plugPath)
 
+" ---- Global settings -----------------
+
+Plug 'lifepillar/vim-solarized8'
+" settings below plug#end
 
 " ---- General Tools -------------------
 
@@ -131,3 +135,8 @@ let g:jsx_ext_required = 0 " Allow JSX in normal JS files
 Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
 
 call plug#end()
+
+" settings for Solarized colorscheme
+set termguicolors
+set background=dark
+colorscheme solarized8
