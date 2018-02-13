@@ -57,9 +57,18 @@ Plug 'tpope/vim-unimpaired'
 
 " ---- Multi-file level tools ----------
 
-Plug 'ctrlpvim/ctrlp.vim'
-let g:ctrlp_custom_ignore = 'node_modules\|.git$\|\.o$'
+" try fzf " Plug 'ctrlpvim/ctrlp.vim'
+" try fzf " let g:ctrlp_custom_ignore = 'node_modules\|.git$\|\.o$'
+" try fzf " function! SilentUpdate()
+" try fzf "   exe ":silent! update"
+" try fzf " endfunction
+" try fzf " let g:ctrlp_buffer_func = {
+" try fzf "       \ 'enter': 'SilentUpdate',
+" try fzf "       \ }
+" try fzf " nmap <silent> <C-p> :silent! update<cr>:CtrlP<cr>
 
+" Depends on fzf being installed
+Plug '/usr/share/vim/vimfiles'
 Plug 'junegunn/fzf.vim'
 
 Plug 'scrooloose/nerdtree'
