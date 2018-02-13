@@ -51,6 +51,8 @@ call plug#begin(plugPath)
 Plug 'lifepillar/vim-solarized8'
 " settings below plug#end
 
+Plug 'vim-airline/vim-airline'
+
 " ---- General Tools -------------------
 
 Plug 'tpope/vim-unimpaired'
