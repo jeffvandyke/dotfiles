@@ -22,10 +22,6 @@ set autowriteall
 " Auto-resize windows when host window is resized
 autocmd VimResized * wincmd =
 
-" ---- digraphs ----------------------------------------------------------------
-"digraphs use decimal encoding
-dig y^ 375
-
 " ---- vim-plug plugins --------------------------------------------------------
 
 if has("nvim")
@@ -130,11 +126,11 @@ nmap <silent> <leader>ak :ALEPrevious<cr>
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 let g:deoplete#enable_at_startup = 1
 
-" deoplete backend for javascript
-Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
-let g:deoplete#sources#ternjs#docs = 1
-let g:deoplete#sources#ternjs#depths = 1
-let g:deoplete#sources#ternjs#types = 1
+" DISABLE " deoplete backend for javascript
+" DISABLE Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
+" DISABLE let g:deoplete#sources#ternjs#docs = 1
+" DISABLE let g:deoplete#sources#ternjs#depths = 1
+" DISABLE let g:deoplete#sources#ternjs#types = 1
 
 " improve javascript highlighting and syntax support
 Plug 'pangloss/vim-javascript'
@@ -144,7 +140,7 @@ let g:javascript_plugin_jsdoc = 1
 Plug 'mxw/vim-jsx'
 let g:jsx_ext_required = 0 " Allow JSX in normal JS files
 
-Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
+" DISABLE Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
 
 call plug#end()
 
