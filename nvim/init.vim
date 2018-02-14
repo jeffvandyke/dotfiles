@@ -19,6 +19,8 @@ au FocusGained,BufEnter * :silent! !
 au FocusLost,BufLeave * :silent! w
 set autowriteall
 
+nmap ZW :w<cr>
+
 " Auto-resize windows when host window is resized
 autocmd VimResized * wincmd =
 
