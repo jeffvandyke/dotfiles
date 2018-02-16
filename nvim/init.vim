@@ -1,5 +1,8 @@
 " Jeff VanDyke's init.vim
 
+set backupdir-=.
+set backupdir^=~/tmp,/tmp
+
 set tabstop=4
 set shiftwidth=4
 set expandtab
