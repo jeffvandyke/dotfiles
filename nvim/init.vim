@@ -3,6 +3,7 @@
 set backupdir-=.
 set backupdir^=~/tmp,/tmp
 
+" tab settings could be overridden by vim-sleuth per project
 set tabstop=4
 set shiftwidth=4
 set expandtab
