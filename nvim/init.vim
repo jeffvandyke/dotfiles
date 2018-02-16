@@ -8,6 +8,8 @@ set tabstop=4
 set shiftwidth=4
 set expandtab
 
+set number
+set scrolloff=4
 set mouse=a
 
 " show live preview of :s command
