@@ -12,8 +12,10 @@ set number
 set scrolloff=4
 set mouse=a
 
-" show live preview of :s command
-set inccommand=nosplit
+if has('nvim')
+  " show live preview of :s command
+  set inccommand=nosplit
+endif
 
 "terminal-input
 tnoremap <Esc> <C-\><C-n>
@@ -22,7 +24,7 @@ tnoremap <Esc> <C-\><C-n>
 set autoread
 au FocusGained,BufEnter * :silent! !
 " save on focus lost
-au FocusLost,BufLeave * :silent! w
+au FocusLost,BufLeave * :silent! update
 set autowriteall
 
 nmap ZW :w<cr>
@@ -50,12 +52,25 @@ endif
 
 call plug#begin(plugPath)
 
+" ---- Vim 8 - Neovim compatibility ----
+
+if !has('nvim')
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
+
 " ---- Global settings -----------------
 
 Plug 'lifepillar/vim-solarized8'
 " settings below plug#end
 
 Plug 'vim-airline/vim-airline'
+let g:airline_section_a = ''
+let g:airline_section_error = ''
+let g:airline_section_warning = ''
+let g:airline#extensions#branch#displayed_head_limit = 15
+let g:airline#extensions#branch#format = 2
+
 
 " ---- General Tools -------------------
 
@@ -66,6 +81,7 @@ Plug 'tpope/vim-unimpaired'
 " Depends on fzf being installed
 Plug '/usr/share/vim/vimfiles'
 Plug 'junegunn/fzf.vim'
+nmap <C-p> :Files<cr>
 
 " Mapping selecting mappings
 nmap <leader><tab> <plug>(fzf-maps-n)
@@ -98,6 +114,8 @@ Plug 'Xuyuanp/nerdtree-git-plugin'
 
 Plug 'tpope/vim-fugitive'
 
+Plug 'airblade/vim-gitgutter'
+
 Plug 'mileszs/ack.vim'
 let g:ackprg = 'rg --vimgrep'
 
@@ -106,12 +124,21 @@ let g:ackprg = 'rg --vimgrep'
 " Detect tab/space indentation
 Plug 'tpope/vim-sleuth'
 
+" C++ switching between header and source
+Plug 'vim-scripts/a.vim'
+nmap <C-h> :A<CR>
+
 " Fix stupid trailing whitespace
 Plug 'bronson/vim-trailing-whitespace'
 
 Plug 'tpope/vim-surround'
 " Allow vim-surround to use '.' for commands
 Plug 'tpope/vim-repeat'
+
+Plug 'tpope/vim-commentary'
+
+Plug 'easymotion/vim-easymotion'
+map <Leader>o <Plug>(easymotion-prefix)
 
 " ---- Language-intelligent tools ------
 
@@ -131,7 +158,14 @@ let g:ale_javascript_eslint_executable='eslint_d'
 nmap <silent> <leader>aj :ALENext<cr>
 nmap <silent> <leader>ak :ALEPrevious<cr>
 
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+" see deoplete's README.md
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plug 'Shougo/deoplete.nvim'
+  " Neovim compatibility provided as first 2 plugins
+endif
+let g:deoplet#enable_smart_case = 1
 let g:deoplete#enable_at_startup = 1
 
 " DISABLE " deoplete backend for javascript
@@ -139,6 +173,10 @@ let g:deoplete#enable_at_startup = 1
 " DISABLE let g:deoplete#sources#ternjs#docs = 1
 " DISABLE let g:deoplete#sources#ternjs#depths = 1
 " DISABLE let g:deoplete#sources#ternjs#types = 1
+
+Plug 'zchee/deoplete-clang'
+let g:deoplete#sources#clang#libclang_path='/usr/lib/libclang.so'
+let g:deoplete#sources#clang#clang_header='/usr/lib/clang'
 
 " improve javascript highlighting and syntax support
 Plug 'pangloss/vim-javascript'
