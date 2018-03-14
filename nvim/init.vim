@@ -128,6 +128,8 @@ let g:ackprg = 'rg --vimgrep'
 " Detect tab/space indentation
 Plug 'tpope/vim-sleuth'
 
+Plug 'editorconfig/editorconfig-vim'
+
 " C++ switching between header and source
 Plug 'vim-scripts/a.vim'
 nmap <C-h> :A<CR>
