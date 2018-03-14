@@ -17,9 +17,6 @@ if has('nvim')
   set inccommand=nosplit
 endif
 
-"terminal-input
-tnoremap <Esc> <C-\><C-n>
-
 " autoload changes
 set autoread
 au FocusGained,BufEnter * :silent! !
