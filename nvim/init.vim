@@ -40,6 +40,8 @@ if has('nvim')
   set inccommand=nosplit
 endif
 
+nmap <leader>f :Ack<space>
+
 " autoload changes
 set autoread
 au FocusGained,BufEnter * :silent! !
@@ -82,18 +84,19 @@ Plug 'tpope/vim-unimpaired'
 " Depends on fzf being installed
 Plug '/usr/share/vim/vimfiles'
 Plug 'junegunn/fzf.vim'
+nmap <Leader>t :Files<CR>
+nmap <Leader>r :Tags<CR>
 
 " Mapping selecting mappings
 nmap <leader><tab> <plug>(fzf-maps-n)
 xmap <leader><tab> <plug>(fzf-maps-x)
 omap <leader><tab> <plug>(fzf-maps-o)
+
 " Insert mode completion
 imap <c-x><c-k> <plug>(fzf-complete-word)
 imap <c-x><c-f> <plug>(fzf-complete-path)
 imap <c-x><c-j> <plug>(fzf-complete-file-ag)
 imap <c-x><c-l> <plug>(fzf-complete-line)
-" Custom map
-nmap <C-p> :Files<cr>
 
 Plug 'scrooloose/nerdtree'
 " Open NERDTree in the directory of the current file (or /home if no file is open)
