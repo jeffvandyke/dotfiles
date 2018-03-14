@@ -32,7 +32,7 @@ set shiftwidth=4
 set expandtab
 
 set number
-set scrolloff=4
+set scrolloff=2
 set mouse=a
 
 if has('nvim')
