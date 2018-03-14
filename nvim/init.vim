@@ -161,6 +161,10 @@ let g:ale_fixers = {
       \   'javascript': ['eslint'],
       \}
 let g:ale_javascript_eslint_executable='eslint_d'
+let g:ale_completion_enabled = 1
+let g:ale_set_loclist = 0 " I like to use the location list for other things
+let g:ale_set_quickfix = 0
+
 nmap <silent> <leader>aj :ALENext<cr>
 nmap <silent> <leader>ak :ALEPrevious<cr>
 
