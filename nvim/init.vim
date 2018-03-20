@@ -188,12 +188,8 @@ Plug 'zchee/deoplete-clang'
 let g:deoplete#sources#clang#libclang_path='/usr/lib/libclang.so'
 let g:deoplete#sources#clang#clang_header='/usr/lib/clang'
 
-" improve javascript highlighting and syntax support
-Plug 'pangloss/vim-javascript'
+Plug 'sheerun/vim-polyglot'
 let g:javascript_plugin_jsdoc = 1
-
-" detect jsx and be smart about it, works with vim-javascript, I think.
-Plug 'mxw/vim-jsx'
 let g:jsx_ext_required = 0 " Allow JSX in normal JS files
 
 " DISABLE Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
