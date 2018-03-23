@@ -25,6 +25,7 @@ Plug 'noahfrederick/vim-neovim-defaults'
 
 set backupdir-=.
 set backupdir^=~/tmp,/tmp
+set backupcopy=yes
 
 " tab settings could be overridden by vim-sleuth per project
 set tabstop=4
