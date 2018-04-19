@@ -189,6 +189,10 @@ Plug 'zchee/deoplete-clang'
 let g:deoplete#sources#clang#libclang_path='/usr/lib/libclang.so'
 let g:deoplete#sources#clang#clang_header='/usr/lib/clang'
 
+Plug 'sebastianmarkow/deoplete-rust'
+let g:deoplete#sources#rust#racer_binary='/usr/bin/racer'
+let g:deoplete#sources#rust#rust_source_path='/home/jeff/repos/rust/src'
+
 Plug 'sheerun/vim-polyglot'
 let g:javascript_plugin_jsdoc = 1
 let g:jsx_ext_required = 0 " Allow JSX in normal JS files
