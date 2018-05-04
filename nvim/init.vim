@@ -26,6 +26,8 @@ Plug 'noahfrederick/vim-neovim-defaults'
 set backupdir-=.
 set backupdir^=~/tmp,/tmp
 set backupcopy=yes
+" Required for operations modifying multiple buffers like rename.
+set hidden
 
 " tab settings could be overridden by vim-sleuth per project
 set tabstop=4
@@ -155,6 +157,15 @@ nmap <C-]> g<C-]>
 
 Plug 'majutsushi/tagbar'
 map <C-b> :TagbarToggle<cr>
+
+Plug 'autozimu/LanguageClient-neovim', {
+      \ 'branch': 'next',
+      \ 'do': 'bash install.sh',
+      \ }
+
+nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+nnoremap <silent> gd :call LanguageClient#textDocument_define()<CR>
+nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
 
 " linter
 Plug 'w0rp/ale'
