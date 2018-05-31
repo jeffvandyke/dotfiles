@@ -19,7 +19,9 @@ endif
 
 call plug#begin(plugPath)
 
-Plug 'noahfrederick/vim-neovim-defaults'
+if !has('nvim')
+  Plug 'noahfrederick/vim-neovim-defaults'
+endif
 
 :map <space> <leader>
 
@@ -162,9 +164,13 @@ Plug 'autozimu/LanguageClient-neovim', {
       \ 'branch': 'next',
       \ 'do': 'bash install.sh',
       \ }
-
+let g:LanguageClient_serverCommands = {
+      \ 'javascript': ['/home/jeff/.npm-global/bin/javascript-typescript-stdio'],
+      \ 'javascript.jsx': ['/home/jeff/.npm-global/bin/javascript-typescript-stdio'],
+      \ }
+" \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
 nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-nnoremap <silent> gd :call LanguageClient#textDocument_define()<CR>
+nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
 nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
 
 " linter
@@ -206,7 +212,7 @@ let g:deoplete#sources#rust#rust_source_path='/home/jeff/repos/rust/src'
 
 Plug 'sheerun/vim-polyglot'
 let g:javascript_plugin_jsdoc = 1
-let g:jsx_ext_required = 0 " Allow JSX in normal JS files
+" let g:jsx_ext_required = 0 " Allow JSX in normal JS files
 
 " DISABLE Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
 
