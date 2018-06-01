@@ -130,8 +130,8 @@ let g:ackprg = 'rg --vimgrep'
 
 " ---- Single-file editing tools -------
 
-" Detect tab/space indentation
-Plug 'tpope/vim-sleuth'
+" " Detect tab/space indentation
+" Plug 'tpope/vim-sleuth'
 
 Plug 'editorconfig/editorconfig-vim'
 
@@ -165,6 +165,7 @@ Plug 'autozimu/LanguageClient-neovim', {
       \ 'do': 'bash install.sh',
       \ }
 let g:LanguageClient_serverCommands = {
+      \ 'rust': ['rls'],
       \ 'javascript': ['/home/jeff/.npm-global/bin/javascript-typescript-stdio'],
       \ 'javascript.jsx': ['/home/jeff/.npm-global/bin/javascript-typescript-stdio'],
       \ }
@@ -175,9 +176,12 @@ nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
 
 " linter
 Plug 'w0rp/ale'
+let g:ale_linters = {
+            \ 'rust': [],
+            \}
 let g:ale_fixers = {
-      \   'javascript': ['eslint'],
-      \}
+            \ 'javascript': ['eslint'],
+            \}
 let g:ale_javascript_eslint_executable='eslint_d'
 let g:ale_completion_enabled = 1
 let g:ale_set_loclist = 0 " I like to use the location list for other things
@@ -206,9 +210,9 @@ Plug 'zchee/deoplete-clang'
 let g:deoplete#sources#clang#libclang_path='/usr/lib/libclang.so'
 let g:deoplete#sources#clang#clang_header='/usr/lib/clang'
 
-Plug 'sebastianmarkow/deoplete-rust'
-let g:deoplete#sources#rust#racer_binary='/usr/bin/racer'
-let g:deoplete#sources#rust#rust_source_path='/home/jeff/repos/rust/src'
+" Plug 'sebastianmarkow/deoplete-rust'
+" let g:deoplete#sources#rust#racer_binary='/usr/bin/racer'
+" let g:deoplete#sources#rust#rust_source_path='/home/jeff/repos/rust/src'
 
 Plug 'sheerun/vim-polyglot'
 let g:javascript_plugin_jsdoc = 1
