@@ -23,13 +23,16 @@ if !has('nvim')
   Plug 'noahfrederick/vim-neovim-defaults'
 endif
 
-:map <space> <leader>
+map <space> <leader>
 
 set backupdir-=.
 set backupdir^=~/tmp,/tmp
-set backupcopy=yes
-" Required for operations modifying multiple buffers like rename.
-set hidden
+" git gutter uses this for git refreshes
+set updatetime=1000
+" Disabling - not in work init.vim
+" set backupcopy=yes
+" " Required for operations modifying multiple buffers like rename.
+" set hidden
 
 " tab settings could be overridden by vim-sleuth per project
 set tabstop=4
@@ -59,6 +62,7 @@ nmap ZW :w<cr>
 " Auto-resize windows when host window is resized
 autocmd VimResized * wincmd =
 
+set noswapfile
 
 " ---- Vim 8 - Neovim compatibility ----
 
@@ -79,6 +83,15 @@ let g:airline_section_warning = ''
 let g:airline#extensions#branch#displayed_head_limit = 15
 let g:airline#extensions#branch#format = 2
 
+" Tmux integration
+Plug 'christoomey/vim-tmux-navigator'
+let g:tmux_navigator_no_mappings = 1
+
+nnoremap <silent> <M-h> :TmuxNavigateLeft<cr>
+nnoremap <silent> <M-j> :TmuxNavigateDown<cr>
+nnoremap <silent> <M-k> :TmuxNavigateUp<cr>
+nnoremap <silent> <M-l> :TmuxNavigateRight<cr>
+" nnoremap <silent> <M-\> :TmuxNavigatePrevious<cr>
 
 " ---- General Tools -------------------
 
@@ -140,7 +153,8 @@ Plug 'vim-scripts/a.vim'
 nmap <C-h> :A<CR>
 
 " Fix stupid trailing whitespace
-Plug 'bronson/vim-trailing-whitespace'
+" old-plugin: Plug 'bronson/vim-trailing-whitespace'
+Plug 'ntpeters/vim-better-whitespace'
 
 Plug 'tpope/vim-surround'
 " Allow vim-surround to use '.' for commands
@@ -149,41 +163,69 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-commentary'
 
 Plug 'easymotion/vim-easymotion'
-map <Leader>o <Plug>(easymotion-prefix)
+" nmap <Tab> <Plug>(easymotion-prefix)
+" vmap <Tab> <Plug>(easymotion-prefix)
+" omap <Tab> <Plug>(easymotion-prefix)
 
 " ---- Language-intelligent tools ------
 
 " Tags management
 Plug 'ludovicchabant/vim-gutentags'
+" TODO: set project root and excludes as needed per project type
 nmap <C-]> g<C-]>
 
 Plug 'majutsushi/tagbar'
 map <C-b> :TagbarToggle<cr>
 
 Plug 'autozimu/LanguageClient-neovim', {
-      \ 'branch': 'next',
-      \ 'do': 'bash install.sh',
-      \ }
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
+" \ 'c': ['clangd'],
+" \ 'javascript': ['flow-language-server', '--stdio'],
+" \ 'javascript.jsx': ['flow-language-server', '--stdio'],
+" \ 'javascript': ['flow', 'lsp', '--from', './node_modules/.bin'],
+" \ 'javascript.jsx': ['flow', 'lsp', '--from', './node_modules/.bin'],
+" \ 'javascript': ['javascript-typescript-stdio'],
+" \ 'javascript.jsx': ['javascript-typescript-stdio'],
 let g:LanguageClient_serverCommands = {
-      \ 'rust': ['rls'],
-      \ 'javascript': ['/home/jeff/.npm-global/bin/javascript-typescript-stdio'],
-      \ 'javascript.jsx': ['/home/jeff/.npm-global/bin/javascript-typescript-stdio'],
-      \ }
-" \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
+    \ 'c': ['/usr/bin/cquery',
+    \   '--log-file=/tmp/cq.log',
+    \   '--init={"cacheDirectory":"/var/cquery/"}'],
+    \ 'cpp': ['/usr/bin/cquery',
+    \   '--log-file=/tmp/cq.log',
+    \   '--init={"cacheDirectory":"/var/cquery/"}'],
+    \ 'rust': ['rls'],
+    \ 'javascript': ['flow-language-server', '--stdio', '--try-flow-bin'],
+    \ 'javascript.jsx': ['flow-language-server', '--stdio', '--try-flow-bin'],
+    \ 'typescript': ['javascript-typescript-stdio'],
+    \ }
+" let g:LanguageClient_autoStart = 1 (1 by default anyway)
+let g:LanguageClient_rootMarkers = {
+    \ 'javascript': ['.flowconfig', 'package.json'],
+    \ 'javascript.jsx': ['.flowconfig', 'package.json'],
+    \ }
+let g:LanguageClient_diagnosticsList = "Location"
+nnoremap <F5> :call LanguageClient_contextMenu()<CR>
+" Or map each action separately
 nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
 nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
 nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
 
 " linter
 Plug 'w0rp/ale'
-let g:ale_linters = {
-            \ 'rust': [],
-            \}
 let g:ale_fixers = {
-            \ 'javascript': ['eslint'],
-            \}
+      \   'javascript': ['eslint'],
+      \   'javascript.jsx': ['eslint'],
+      \}
+let g:ale_linters = {
+    \ 'rust': [],
+    \ 'cpp': [],
+    \}
+"\   'cpp': ['clang', 'cppcheck', 'gcc', 'clang-format'],
+let g:ale_cpp_clangtidy_header_suffixes = ['h', 'hpp', 'hxx', 'tcc']
 let g:ale_javascript_eslint_executable='eslint_d'
-let g:ale_completion_enabled = 1
+let g:ale_completion_enabled = 0
 let g:ale_set_loclist = 0 " I like to use the location list for other things
 let g:ale_set_quickfix = 0
 
@@ -197,28 +239,16 @@ else
   Plug 'Shougo/deoplete.nvim'
   " Neovim compatibility provided as first 2 plugins
 endif
-let g:deoplet#enable_smart_case = 1
+let g:deoplete#enable_smart_case = 1
 let g:deoplete#enable_at_startup = 1
 
-" DISABLE " deoplete backend for javascript
-" DISABLE Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
-" DISABLE let g:deoplete#sources#ternjs#docs = 1
-" DISABLE let g:deoplete#sources#ternjs#depths = 1
-" DISABLE let g:deoplete#sources#ternjs#types = 1
-
-Plug 'zchee/deoplete-clang'
-let g:deoplete#sources#clang#libclang_path='/usr/lib/libclang.so'
-let g:deoplete#sources#clang#clang_header='/usr/lib/clang'
-
-" Plug 'sebastianmarkow/deoplete-rust'
-" let g:deoplete#sources#rust#racer_binary='/usr/bin/racer'
-" let g:deoplete#sources#rust#rust_source_path='/home/jeff/repos/rust/src'
+" Uses clang-format to format code with Vim
+Plug 'rhysd/vim-clang-format'
 
 Plug 'sheerun/vim-polyglot'
 let g:javascript_plugin_jsdoc = 1
-" let g:jsx_ext_required = 0 " Allow JSX in normal JS files
-
-" DISABLE Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
+let g:javascript_plugin_flow = 1
+let g:jsx_ext_required = 1 " Allow JSX in normal JS files
 
 call plug#end()
 
