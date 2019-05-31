@@ -25,8 +25,6 @@ endif
 
 map <space> <leader>
 
-set backupdir-=.
-set backupdir^=~/tmp,/tmp
 " git gutter uses this for git refreshes
 set updatetime=1000
 " Disabling - not in work init.vim
@@ -61,8 +59,6 @@ nmap ZW :w<cr>
 
 " Auto-resize windows when host window is resized
 autocmd VimResized * wincmd =
-
-set noswapfile
 
 " ---- Vim 8 - Neovim compatibility ----
 
@@ -175,7 +171,7 @@ Plug 'ludovicchabant/vim-gutentags'
 nmap <C-]> g<C-]>
 
 Plug 'majutsushi/tagbar'
-map <C-b> :TagbarToggle<cr>
+command! TT TagbarToggle
 
 Plug 'autozimu/LanguageClient-neovim', {
     \ 'branch': 'next',
@@ -196,8 +192,8 @@ let g:LanguageClient_serverCommands = {
     \   '--log-file=/tmp/cq.log',
     \   '--init={"cacheDirectory":"/var/cquery/"}'],
     \ 'rust': ['rls'],
-    \ 'javascript': ['flow-language-server', '--stdio', '--try-flow-bin'],
-    \ 'javascript.jsx': ['flow-language-server', '--stdio', '--try-flow-bin'],
+    \ 'javascript': ['npx', 'flow', 'lsp'],
+    \ 'javascript.jsx': ['npx', 'flow', 'lsp'],
     \ 'typescript': ['javascript-typescript-stdio'],
     \ }
 " let g:LanguageClient_autoStart = 1 (1 by default anyway)
@@ -228,7 +224,6 @@ let g:ale_javascript_eslint_executable='eslint_d'
 let g:ale_completion_enabled = 0
 let g:ale_set_loclist = 0 " I like to use the location list for other things
 let g:ale_set_quickfix = 0
-
 nmap <silent> <leader>aj :ALENext<cr>
 nmap <silent> <leader>ak :ALEPrevious<cr>
 
@@ -248,7 +243,8 @@ Plug 'rhysd/vim-clang-format'
 Plug 'sheerun/vim-polyglot'
 let g:javascript_plugin_jsdoc = 1
 let g:javascript_plugin_flow = 1
-let g:jsx_ext_required = 1 " Allow JSX in normal JS files
+let g:jsx_ext_required = 1 " Don't mix JSX in normal JS files, needed for Flow
+au BufRead,BufNewFile,BufReadPost *.js.flow set filetype=javascript
 
 call plug#end()
 
