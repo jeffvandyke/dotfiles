@@ -1,6 +1,7 @@
 " Jeff VanDyke's init.vim
 
 " Plugins first for vim-neovim-defaults
+" vim-plug auto-install method, works for NeoVim and Vim both.
 if has("nvim")
   let plugPath = "~/.local/share/nvim/plugged"
   if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
@@ -25,21 +26,23 @@ endif
 
 map <space> <leader>
 
-" git gutter uses this for git refreshes
+" gitgutter uses this for git refreshes
 set updatetime=1000
-" Disabling - not in work init.vim
-" set backupcopy=yes
-" " Required for operations modifying multiple buffers like rename.
-" set hidden
 
-" tab settings could be overridden by vim-sleuth per project
+" tab settings could be overridden by .editorconfig or vim-sleuth per project
 set tabstop=4
 set shiftwidth=4
 set expandtab
 
 set number
+set relativenumber
+au BufReadPost quickfix setlocal norelativenumber
+
 set scrolloff=2
 set mouse=a
+
+set cursorcolumn
+set cursorline
 
 if has('nvim')
   " show live preview of :s command
@@ -58,7 +61,27 @@ set autowriteall
 nmap ZW :w<cr>
 
 " Auto-resize windows when host window is resized
-autocmd VimResized * wincmd =
+:autocmd VimResized * wincmd =
+
+" C++ indentation
+set cinoptions=g0
+
+" Javascript path navigation
+set path=.,src
+set suffixesadd=.js,.jsx,/index.js,/index.jsx
+
+"" function! LoadMainNodeModule(fname)
+""     let nodeModules = "./node_modules/"
+""     let packageJsonPath = nodeModules . a:fname . "/package.json"
+""
+""     if filereadable(packageJsonPath)
+""         return nodeModules . a:fname . "/" . json_decode(join(readfile(packageJsonPath))).main
+""     else
+""         return nodeModules . a:fname
+""     endif
+"" endfunction
+""
+"" set includeexpr=LoadMainNodeModule(v:fname)
 
 " ---- Vim 8 - Neovim compatibility ----
 
@@ -92,6 +115,9 @@ nnoremap <silent> <M-l> :TmuxNavigateRight<cr>
 " ---- General Tools -------------------
 
 Plug 'tpope/vim-unimpaired'
+
+" casing smarts for renaming
+Plug 'tpope/vim-abolish'
 
 " ---- Multi-file level tools ----------
 
@@ -167,7 +193,8 @@ Plug 'easymotion/vim-easymotion'
 
 " Tags management
 Plug 'ludovicchabant/vim-gutentags'
-" TODO: set project root and excludes as needed per project type
+let g:gutentags_ctags_exclude = ['*node_modules*', 'assets/webhelp/*', '*buildroot/output/*', '*client/build/*']
+let g:gutentags_project_root = ['package.json']
 nmap <C-]> g<C-]>
 
 Plug 'majutsushi/tagbar'
@@ -184,6 +211,10 @@ Plug 'autozimu/LanguageClient-neovim', {
 " \ 'javascript.jsx': ['flow', 'lsp', '--from', './node_modules/.bin'],
 " \ 'javascript': ['javascript-typescript-stdio'],
 " \ 'javascript.jsx': ['javascript-typescript-stdio'],
+" \ 'cs': ['mono',
+" \   '/opt/omnisharp-roslyn/OmniSharp.exe',
+" \   '--languageserver',
+" \   '--verbose'],
 let g:LanguageClient_serverCommands = {
     \ 'c': ['/usr/bin/cquery',
     \   '--log-file=/tmp/cq.log',
@@ -198,15 +229,23 @@ let g:LanguageClient_serverCommands = {
     \ }
 " let g:LanguageClient_autoStart = 1 (1 by default anyway)
 let g:LanguageClient_rootMarkers = {
-    \ 'javascript': ['.flowconfig', 'package.json'],
-    \ 'javascript.jsx': ['.flowconfig', 'package.json'],
+    \ 'cs': ['.git', '*.csproj'],
+    \ 'javascript': ['package.json', '.git'],
+    \ 'javascript.jsx': ['package.json', '.git'],
     \ }
 let g:LanguageClient_diagnosticsList = "Location"
 nnoremap <F5> :call LanguageClient_contextMenu()<CR>
-" Or map each action separately
+inoremap <F5> :call LanguageClient_contextMenu()<CR>
+vnoremap <F5> :call LanguageClient_contextMenu()<CR>
 nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
 nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
 nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+" set formatexpr=LanguageClient#textDocument_rangeFormatting_sync()<CR>
+let g:LanguageClient_useVirtualText = 0
+
+" for debugging
+" let g:LanguageClient_loggingLevel = 'DEBUG'
+" let g:LanguageClient_loggingFile = 'lang-client.log'
 
 " linter
 Plug 'w0rp/ale'
@@ -218,6 +257,7 @@ let g:ale_linters = {
     \ 'rust': [],
     \ 'cpp': [],
     \}
+" \ 'cs': ['OmniSharp'],
 "\   'cpp': ['clang', 'cppcheck', 'gcc', 'clang-format'],
 let g:ale_cpp_clangtidy_header_suffixes = ['h', 'hpp', 'hxx', 'tcc']
 let g:ale_javascript_eslint_executable='eslint_d'
@@ -237,8 +277,53 @@ endif
 let g:deoplete#enable_smart_case = 1
 let g:deoplete#enable_at_startup = 1
 
+"" Plug 'OmniSharp/omnisharp-vim'
+"" let g:OmniSharp_timeout = 5
+"" set completeopt=longest,menuone,preview
+"" augroup omnisharp_commands
+""     autocmd!
+""     " DISABLE - idonlikit
+""     " " Show type information automatically when the cursor stops moving
+""     " autocmd CursorHold *.cs call OmniSharp#TypeLookupWithoutDocumentation()
+""     " The following commands are contextual, based on the cursor position.
+""     autocmd FileType cs nnoremap <buffer> gd :OmniSharpGotoDefinition<CR>
+""     autocmd FileType cs nnoremap <buffer> <Leader>sfi :OmniSharpFindImplementations<CR>
+""     autocmd FileType cs nnoremap <buffer> <Leader>sfs :OmniSharpFindSymbol<CR>
+""     autocmd FileType cs nnoremap <buffer> <Leader>sfu :OmniSharpFindUsages<CR>
+""     " Finds members in the current buffer
+""     autocmd FileType cs nnoremap <buffer> <Leader>sfm :OmniSharpFindMembers<CR>
+""     autocmd FileType cs nnoremap <buffer> <Leader>sfx :OmniSharpFixUsings<CR>
+""     autocmd FileType cs nnoremap <buffer> <Leader>stt :OmniSharpTypeLookup<CR>
+""     autocmd FileType cs nnoremap <buffer> <Leader>sdc :OmniSharpDocumentation<CR>
+""     autocmd FileType cs nnoremap <buffer> K :OmniSharpDocumentation<CR>
+""     autocmd FileType cs nnoremap <buffer> <C-\> :OmniSharpSignatureHelp<CR>
+""     autocmd FileType cs inoremap <buffer> <C-\> <C-o>:OmniSharpSignatureHelp<CR>
+""     " Navigate up and down by method/property/field
+""     autocmd FileType cs nnoremap <buffer> <C-k> :OmniSharpNavigateUp<CR>
+""     autocmd FileType cs nnoremap <buffer> <C-j> :OmniSharpNavigateDown<CR>
+"" augroup END
+"" " Add syntax highlighting for types and interfaces
+"" nnoremap <Leader>sht :OmniSharpHighlightTypes<CR>
+
+" DISABLE " deoplete backend for javascript
+" DISABLE Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
+" DISABLE let g:deoplete#sources#ternjs#docs = 1
+" DISABLE let g:deoplete#sources#ternjs#depths = 1
+" DISABLE let g:deoplete#sources#ternjs#types = 1
+
+Plug 'maksimr/vim-jsbeautify'
+
+" DISABLE lsp+cquery autocomplete good enough Plug 'zchee/deoplete-clang'
+" DISABLE lsp+cquery autocomplete good enough let g:deoplete#sources#clang#libclang_path='/usr/lib/libclang.so'
+" DISABLE lsp+cquery autocomplete good enough let g:deoplete#sources#clang#clang_header='/usr/lib/clang'
+
 " Uses clang-format to format code with Vim
 Plug 'rhysd/vim-clang-format'
+autocmd FileType c,cpp,objc nnoremap <buffer><Leader>cf :<C-u>ClangFormat<CR>
+autocmd FileType c,cpp,objc vnoremap <buffer><Leader>cf :ClangFormat<CR>
+nmap <Leader>C :ClangFormatAutoToggle<CR>
+
+" au BufNewFile,BufRead *.xaml        setf xml
 
 Plug 'sheerun/vim-polyglot'
 let g:javascript_plugin_jsdoc = 1
