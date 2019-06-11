@@ -331,6 +331,8 @@ let g:javascript_plugin_flow = 1
 let g:jsx_ext_required = 1 " Don't mix JSX in normal JS files, needed for Flow
 au BufRead,BufNewFile,BufReadPost *.js.flow set filetype=javascript
 
+Plug 'jparise/vim-graphql'
+
 call plug#end()
 
 " settings for Solarized colorscheme
