@@ -37,6 +37,8 @@ set expandtab
 set number
 set relativenumber
 au BufReadPost quickfix setlocal norelativenumber
+set wrap
+set linebreak
 
 set scrolloff=2
 set mouse=a
