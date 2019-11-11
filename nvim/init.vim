@@ -51,8 +51,6 @@ if has('nvim')
   set inccommand=nosplit
 endif
 
-nmap <leader>f :Ack<space>
-
 " autoload changes
 set autoread
 au FocusGained,BufEnter * :silent! !
@@ -60,7 +58,14 @@ au FocusGained,BufEnter * :silent! !
 au FocusLost,BufLeave * :silent! update
 set autowriteall
 
+" custom mappings
 nmap ZW :w<cr>
+nmap <leader>f :Ack<space>
+" Joins paragraphs with "^A" control characters and resets them back.
+nnoremap <Leader>[j :%s/\(.\+\)\n/\1/g<cr>:noh<cr>
+vnoremap <Leader>[j  :s/\(.\+\)\n/\1/g<cr>:noh<cr>
+nnoremap <Leader>]j :%s//\r/g<cr>
+vnoremap <Leader>]j  :s//\r/g<cr>
 
 " Auto-resize windows when host window is resized
 :autocmd VimResized * wincmd =
@@ -227,6 +232,7 @@ let g:LanguageClient_serverCommands = {
     \ 'rust': ['rls'],
     \ 'javascript': ['npx', 'flow', 'lsp'],
     \ 'javascript.jsx': ['npx', 'flow', 'lsp'],
+    \ 'javascriptreact': ['npx', 'flow', 'lsp'],
     \ 'typescript': ['javascript-typescript-stdio'],
     \ }
 " let g:LanguageClient_autoStart = 1 (1 by default anyway)
@@ -234,6 +240,7 @@ let g:LanguageClient_rootMarkers = {
     \ 'cs': ['.git', '*.csproj'],
     \ 'javascript': ['package.json', '.git'],
     \ 'javascript.jsx': ['package.json', '.git'],
+    \ 'javascriptreact': ['package.json', '.git'],
     \ }
 let g:LanguageClient_diagnosticsList = "Location"
 nnoremap <F5> :call LanguageClient_contextMenu()<CR>
@@ -242,8 +249,21 @@ vnoremap <F5> :call LanguageClient_contextMenu()<CR>
 nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
 nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
 nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+" lots of leader commands
+nnoremap <leader>ld :call LanguageClient#textDocument_definition()<CR>
+nnoremap <leader>lr :call LanguageClient#textDocument_rename()<CR>
+nnoremap <leader>lf :call LanguageClient#textDocument_formatting()<CR>
+nnoremap <leader>lt :call LanguageClient#textDocument_typeDefinition()<CR>
+nnoremap <leader>lx :call LanguageClient#textDocument_references()<CR>
+nnoremap <leader>la :call LanguageClient_workspace_applyEdit()<CR>
+nnoremap <leader>lc :call LanguageClient#textDocument_completion()<CR>
+nnoremap <leader>lh :call LanguageClient#textDocument_hover()<CR>
+nnoremap <leader>ls :call LanguageClient_textDocument_documentSymbol()<CR>
+nnoremap <leader>lm :call LanguageClient_contextMenu()<CR>
+
 " set formatexpr=LanguageClient#textDocument_rangeFormatting_sync()<CR>
 let g:LanguageClient_useVirtualText = 0
+let g:LanguageClient_hoverPreview = "Always"
 
 " for debugging
 " let g:LanguageClient_loggingLevel = 'DEBUG'
@@ -321,7 +341,7 @@ Plug 'maksimr/vim-jsbeautify'
 
 " Uses clang-format to format code with Vim
 Plug 'rhysd/vim-clang-format'
-autocmd FileType c,cpp,objc nnoremap <buffer><Leader>cf :<C-u>ClangFormat<CR>
+autocmd FileType c,cpp,objc nnoremap <buffer><Leader>cf :%ClangFormat<CR>
 autocmd FileType c,cpp,objc vnoremap <buffer><Leader>cf :ClangFormat<CR>
 nmap <Leader>C :ClangFormatAutoToggle<CR>
 
@@ -334,6 +354,11 @@ let g:jsx_ext_required = 1 " Don't mix JSX in normal JS files, needed for Flow
 au BufRead,BufNewFile,BufReadPost *.js.flow set filetype=javascript
 
 Plug 'jparise/vim-graphql'
+
+Plug 'ledger/vim-ledger'
+" config link: https://github.com/ledger/vim-ledger
+nmap <Leader>ln :%LedgerAlign<cr>
+nmap <Leader>le :call ledger#entry()<cr>
 
 call plug#end()
 
