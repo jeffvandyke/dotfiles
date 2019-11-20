@@ -27,7 +27,7 @@ endif
 map <space> <leader>
 
 " gitgutter uses this for git refreshes
-set updatetime=1000
+set updatetime=400
 
 " tab settings could be overridden by .editorconfig or vim-sleuth per project
 set tabstop=4
@@ -39,6 +39,7 @@ set relativenumber
 au BufReadPost quickfix setlocal norelativenumber
 set wrap
 set linebreak
+set showbreak=▶▶━┫
 
 set scrolloff=2
 set mouse=a
@@ -192,6 +193,7 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-commentary'
 
 Plug 'easymotion/vim-easymotion'
+" Can't use tab - it's ctrl-i, just the way it works.
 " nmap <Tab> <Plug>(easymotion-prefix)
 " vmap <Tab> <Plug>(easymotion-prefix)
 " omap <Tab> <Plug>(easymotion-prefix)
@@ -289,6 +291,8 @@ let g:ale_set_quickfix = 0
 nmap <silent> <leader>aj :ALENext<cr>
 nmap <silent> <leader>ak :ALEPrevious<cr>
 
+set completeopt=menuone,preview,longest
+
 " see deoplete's README.md
 if has('nvim')
   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -326,12 +330,6 @@ let g:deoplete#enable_at_startup = 1
 "" augroup END
 "" " Add syntax highlighting for types and interfaces
 "" nnoremap <Leader>sht :OmniSharpHighlightTypes<CR>
-
-" DISABLE " deoplete backend for javascript
-" DISABLE Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
-" DISABLE let g:deoplete#sources#ternjs#docs = 1
-" DISABLE let g:deoplete#sources#ternjs#depths = 1
-" DISABLE let g:deoplete#sources#ternjs#types = 1
 
 Plug 'maksimr/vim-jsbeautify'
 
