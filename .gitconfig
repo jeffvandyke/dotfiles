@@ -1,0 +1,76 @@
+[core]
+    autocrlf = input
+    # pager = less -+X
+    excludesfile = ~/.gitignore_global
+[user]
+    name = Jeff VanDyke
+    email = jeffvd.a216@gmail.com
+[color]
+    ui = auto
+[fetch]
+    prune = true
+[merge]
+    conflictStyle = diff3
+    renamelimit = 7000
+    tool = vimdiff
+[diff]
+    colorMoved = zebra
+    colorMovedWS = allow-indentation-change
+[log]
+    follow = true
+[pull]
+    rebase = true
+[push]
+    default = simple
+[gc]
+    autoDetach = false
+
+# [rerere]
+#     enabled = 1
+
+[filter "spaces2tabs"]
+    clean = unexpand --tabs=4 --first-only
+    smudge = expand --tabs=4 --initial
+
+[include]
+    path = .gitconfig-local
+
+[alias]
+    sub = submodule
+    co = checkout
+    ci = commit
+    st = status
+    br = branch
+    rb = rebase
+
+    suir = submodule update --init --recursive
+    ru = remote update
+    brm = !git branch --merged | egrep -v '(^\\*master|dev)' | xargs git branch -d
+    cleanup = clean -dx -e '.st*' -e .cquery # use with -f or -n (dry-run)
+
+    brad = for-each-ref --sort=committerdate refs/heads/ --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(color:red)%(objectname:short)%(color:reset) - %(contents:subject) - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))'
+    bradr = for-each-ref --sort=committerdate refs/remotes/ --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(color:red)%(objectname:short)%(color:reset) - %(contents:subject) - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))'
+
+    dc = diff --cached
+    dw = diff --word-diff
+    dwd = diff --word-diff-regex=.
+
+    type = cat-file -t
+    dump = cat-file -p
+
+    hist = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
+
+    ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --graph --decorate
+    ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --graph --decorate --numstat
+
+    lg = !"git lg1"
+    lg1 = !"git lg1-specific --all"
+    lg2 = !"git lg2-specific --all"
+    lg3 = !"git lg3-specific --all"
+
+    lg1-specific = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ai)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)'
+    lg2-specific = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(auto)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'
+    lg3-specific = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset) %C(bold cyan)(committed: %cD)%C(reset) %C(auto)%d%C(reset)%n''          %C(white)%s%C(reset)%n''          %C(dim white)- %an <%ae> %C(reset) %C(dim white)(committer: %cn <%ce>)%C(reset)'
+    # before 2019-09 lg1-specific = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)'
+    # before 2019-09 lg2-specific = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(auto)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'
+    # before 2019-09 lg3-specific = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset) %C(bold cyan)(committed: %cD)%C(reset) %C(auto)%d%C(reset)%n''          %C(white)%s%C(reset)%n''          %C(dim white)- %an <%ae> %C(reset) %C(dim white)(committer: %cn <%ce>)%C(reset)'

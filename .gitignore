@@ -1,8 +1,1 @@
-# Ignore everything
-/*
-
-# ...except these
-!.gitignore
-!nvim/
-nvim/.netrwhist
-!.zshrc
+# bare folder, link symbolically to clone location

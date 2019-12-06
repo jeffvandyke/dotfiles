@@ -1,0 +1,11 @@
+.cquery
+tags
+tags.lock
+tags.temp
+compile_commands.json
+
+cscope.out
+cscope.files
+
+.stignore
+**/.stfolder
