@@ -5,3 +5,4 @@
 !.gitignore
 !nvim/
 nvim/.netrwhist
+!.zshrc
