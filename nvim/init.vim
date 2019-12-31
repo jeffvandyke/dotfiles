@@ -182,6 +182,8 @@ Plug 'editorconfig/editorconfig-vim'
 Plug 'vim-scripts/a.vim'
 nmap <C-h> :A<CR>
 
+Plug 'ap/vim-css-color'
+
 " Fix stupid trailing whitespace
 " old-plugin: Plug 'bronson/vim-trailing-whitespace'
 Plug 'ntpeters/vim-better-whitespace'
