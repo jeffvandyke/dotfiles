@@ -9,7 +9,7 @@ fi
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH="$HOME/.oh-my-zsh"
+export ZSH="/home/jeff/.oh-my-zsh"
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
@@ -47,12 +47,12 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # ENABLE_CORRECTION="true"
 
 # Uncomment the following line to display red dots whilst waiting for completion.
-# COMPLETION_WAITING_DOTS="true"
+COMPLETION_WAITING_DOTS="true"
 
 # Uncomment the following line if you want to disable marking untracked files
 # under VCS as dirty. This makes repository status check for large repositories
 # much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
+DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 # Uncomment the following line if you want to change the command execution time
 # stamp shown in the history command output.
@@ -71,7 +71,6 @@ HIST_STAMPS="yyyy-mm-dd"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
     archlinux
-    cargo
     colored-man-pages
     common-aliases
     docker
@@ -85,7 +84,6 @@ plugins=(
     sudo
     systemd
     tmux
-    # tmuxinator
     web-search
     yarn
 )
@@ -120,10 +118,13 @@ alias gsh='git show'
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
 # For a full list of active aliases, run `alias`.
 
-export PATH="$PATH:$HOME/bin"
-export PATH="$PATH:$HOME/.cargo/bin"
-export PATH="$PATH:$HOME/.npm-global/bin"
-# export PATH="$PATH:$HOME/.gem/ruby/2.5.0/bin"
+export VISUAL=/usr/bin/nvim
+export EDITOR=/usr/bin/nvim
+
+export PATH="$PATH:/home/jeff/bin"
+export PATH="$PATH:/home/jeff/.cargo/bin"
+export PATH="$PATH:/home/jeff/.npm-global/bin"
+# export PATH="$PATH:/home/jeff-vandyke/.gem/ruby/2.5.0/bin"
 
 #
 export RUST_BACKTRACE=1

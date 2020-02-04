@@ -215,13 +215,11 @@ Plug 'autozimu/LanguageClient-neovim', {
     \ 'branch': 'next',
     \ 'do': 'bash install.sh',
     \ }
-" \ 'c': ['clangd'],
-" \ 'javascript': ['flow-language-server', '--stdio'],
-" \ 'javascript.jsx': ['flow-language-server', '--stdio'],
-" \ 'javascript': ['flow', 'lsp', '--from', './node_modules/.bin'],
-" \ 'javascript.jsx': ['flow', 'lsp', '--from', './node_modules/.bin'],
-" \ 'javascript': ['javascript-typescript-stdio'],
-" \ 'javascript.jsx': ['javascript-typescript-stdio'],
+
+" \ 'javascript': ['npx', 'flow', 'lsp'],
+" \ 'javascript.jsx': ['npx', 'flow', 'lsp'],
+" \ 'javascriptreact': ['npx', 'flow', 'lsp'],
+" \ 'typescript': ['javascript-typescript-stdio'],
 " \ 'cs': ['mono',
 " \   '/opt/omnisharp-roslyn/OmniSharp.exe',
 " \   '--languageserver',
@@ -234,10 +232,11 @@ let g:LanguageClient_serverCommands = {
     \   '--log-file=/tmp/cq.log',
     \   '--init={"cacheDirectory":"/var/cquery/"}'],
     \ 'rust': ['rls'],
-    \ 'javascript': ['npx', 'flow', 'lsp'],
-    \ 'javascript.jsx': ['npx', 'flow', 'lsp'],
-    \ 'javascriptreact': ['npx', 'flow', 'lsp'],
-    \ 'typescript': ['javascript-typescript-stdio'],
+    \ 'javascript': ['npx', 'typescript-language-server', '--stdio'],
+    \ 'javascript.jsx': ['npx', 'typescript-language-server', '--stdio'],
+    \ 'javascriptreact': ['npx', 'typescript-language-server', '--stdio'],
+    \ 'typescript': ['npx', 'typescript-language-server', '--stdio'],
+    \ 'typescript.tsx': ['npx', 'typescript-language-server', '--stdio'],
     \ }
 " let g:LanguageClient_autoStart = 1 (1 by default anyway)
 let g:LanguageClient_rootMarkers = {
@@ -245,6 +244,8 @@ let g:LanguageClient_rootMarkers = {
     \ 'javascript': ['package.json', '.git'],
     \ 'javascript.jsx': ['package.json', '.git'],
     \ 'javascriptreact': ['package.json', '.git'],
+    \ 'typescript': ['package.json', '.git'],
+    \ 'typescript.tsx': ['package.json', '.git'],
     \ }
 let g:LanguageClient_diagnosticsList = "Location"
 nnoremap <F5> :call LanguageClient_contextMenu()<CR>
