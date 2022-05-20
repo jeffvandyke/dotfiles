@@ -74,6 +74,7 @@ plugins=(
     colored-man-pages
     common-aliases
     docker
+    docker-compose
     # Requires special instructions, see fzf-zsh git repo
     fzf-zsh
     git
@@ -83,6 +84,7 @@ plugins=(
     python
     sudo
     systemd
+    terraform
     tmux
     web-search
     yarn
@@ -124,14 +126,22 @@ export EDITOR=/usr/bin/nvim
 export PATH="$PATH:/home/jeff/bin"
 export PATH="$PATH:/home/jeff/.cargo/bin"
 export PATH="$PATH:/home/jeff/.npm-global/bin"
-# export PATH="$PATH:/home/jeff-vandyke/.gem/ruby/2.5.0/bin"
+# export PATH="$PATH:/home/jeff/.gem/ruby/3.0.0/bin"
+export PATH="$PATH:/opt/cuda/bin"
+
+export PATH=/opt/cuda/bin${PATH:+:${PATH}}
+export LD_LIBRARY_PATH=/opt/cuda/lib64:${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 
 #
 export RUST_BACKTRACE=1
 
+export LEDGER_FILE=/home/jeff/Personal/Financing/Accounting/jeff.ledger
+export LEDGER_DATE_FORMAT="%Y-%m-%d"
+
 alias xo=xdg-open
 alias vi=nvim
 alias ytd=youtube-dl
+alias ytfd=youtube-full-dl
 alias rr=ranger
 
 
