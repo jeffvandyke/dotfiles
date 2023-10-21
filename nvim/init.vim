@@ -56,6 +56,9 @@ set mouse=a
 
 set cursorcolumn
 set cursorline
+
+set shortmess+=c
+
 " From COC recommendations
 set cmdheight=2
 
@@ -93,19 +96,6 @@ set cinoptions=g0
 " Javascript path navigation
 set path=.,src
 set suffixesadd=.js,.jsx,/index.js,/index.jsx
-
-"" function! LoadMainNodeModule(fname)
-""     let nodeModules = "./node_modules/"
-""     let packageJsonPath = nodeModules . a:fname . "/package.json"
-""
-""     if filereadable(packageJsonPath)
-""         return nodeModules . a:fname . "/" . json_decode(join(readfile(packageJsonPath))).main
-""     else
-""         return nodeModules . a:fname
-""     endif
-"" endfunction
-""
-"" set includeexpr=LoadMainNodeModule(v:fname)
 
 " ---- Vim 8 - Neovim compatibility ----
 
@@ -234,6 +224,8 @@ Plug 'tpope/vim-commentary'
 
 Plug 'chrisbra/csv.vim'
 
+Plug 'pantharshit00/vim-prisma'
+
 " Plug 'easymotion/vim-easymotion'
 " Can't use tab - it's ctrl-i, just the way it works.
 " nmap <Tab> <Plug>(easymotion-prefix)
@@ -263,295 +255,9 @@ augroup typescript_bindings
   autocmd FileType typescript call s:setup_ts_bundings()
   autocmd FileType typescriptreact call s:setup_ts_bundings()
   function! s:setup_ts_bundings() abort
-    "ts" " nnoremap <F5> <CR>
-    "ts" " inoremap <F5> <CR>
-    "ts" " vnoremap <F5> <CR>
-
-    "ts" " nvim-typescript bindings
-    "ts" nnoremap K :TSType<CR>
-    "ts" " lots of leader commands
-    "ts" nnoremap <leader>ld :TSDef<CR>
-    "ts" nnoremap <leader>lr :TSRename<CR>
-    "ts" nnoremap <leader>lf :Prettier<CR>
-    "ts" nnoremap <leader>lt :TSTypeDef<CR>
-    "ts" nnoremap <leader>lx :TSRefs<CR>
-
     set signcolumn=yes
-
-    " ALE bindings
-
-    " nnoremap K :ALEDocumentation<CR>
-    " nnoremap <leader>ld :ALEGoToDefinition<CR>
-    " nnoremap <leader>lr :ALERename<CR>
-    " nnoremap <leader>lf :w<CR>:CocCommand eslint.executeAutofix<CR>:Prettier<CR>
-    " nnoremap <leader>lt :ALEGoToTypeDefinition<CR>
-    " nnoremap <leader>lx :ALEFindReferences<CR>
-    " " nnoremap <leader>la :call LanguageClient_workspace_applyEdit()<CR>
-    " " nnoremap <leader>lc :call LanguageClient#textDocument_completion()<CR>
-    " nnoremap <leader>lh :ALEHover<CR>
-    " " nnoremap <leader>ls :call LanguageClient_textDocument_documentSymbol()<CR>
-    " " nnoremap <leader>lm :call LanguageClient_contextMenu()<CR>
-    " " set omnifunc=ale#completion#OmniFunc
-
-
   endfunction
 augroup end
-
-"" Plug 'autozimu/LanguageClient-neovim', {
-""     \ 'branch': 'next',
-""     \ 'do': 'bash install.sh',
-""     \ }
-""
-"" nmap ]C :LanguageClientStop<cr>
-"" nmap [C :LanguageClientStart<cr>
-""
-"" " \ 'javascript': ['npx', 'flow', 'lsp'],
-"" " \ 'javascript.jsx': ['npx', 'flow', 'lsp'],
-"" " \ 'javascriptreact': ['npx', 'flow', 'lsp'],
-"" " \ 'typescript': ['javascript-typescript-stdio'],
-"" " \ 'cs': ['mono',
-"" " \   '/opt/omnisharp-roslyn/OmniSharp.exe',
-"" " \   '--languageserver',
-"" " \   '--verbose'],
-"" let g:LanguageClient_serverCommands = {
-""     \ 'c': ['/usr/bin/cquery',
-""     \   '--log-file=/tmp/cq.log',
-""     \   '--init={"cacheDirectory":"/var/cquery/"}'],
-""     \ 'cpp': ['/usr/bin/cquery',
-""     \   '--log-file=/tmp/cq.log',
-""     \   '--init={"cacheDirectory":"/var/cquery/"}'],
-""     \ 'rust': ['rls'],
-""     \ 'javascript': ['typescript-language-server', '--stdio'],
-""     \ 'javascript.jsx': ['typescript-language-server', '--stdio'],
-""     \ 'javascriptreact': ['typescript-language-server', '--stdio'],
-""     \ 'typescript': ['typescript-language-server', '--stdio'],
-""     \ 'typescript.tsx': ['typescript-language-server', '--stdio'],
-""     \ 'typescriptreact': ['typescript-language-server', '--stdio'],
-""     \ }
-"" " \ 'graphql': ['graphql-language-service'],
-"" " let g:LanguageClient_autoStart = 1 (1 by default anyway)
-"" let g:LanguageClient_rootMarkers = {
-""     \ 'cs': ['.git', '*.csproj'],
-""     \ 'javascript': ['package.json', '.git'],
-""     \ 'javascript.jsx': ['package.json', '.git'],
-""     \ 'javascriptreact': ['package.json', '.git'],
-""     \ 'typescript': ['package.json', '.git'],
-""     \ 'typescript.tsx': ['package.json', '.git'],
-""     \ }
-"" let g:LanguageClient_diagnosticsList = "Location"
-"" nnoremap <F5> :call LanguageClient_contextMenu()<CR>
-"" inoremap <F5> :call LanguageClient_contextMenu()<CR>
-"" vnoremap <F5> :call LanguageClient_contextMenu()<CR>
-"" nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-"" nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
-"" nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
-"" " lots of leader commands
-"" nnoremap <leader>ld :call LanguageClient#textDocument_definition()<CR>
-"" nnoremap <leader>lr :call LanguageClient#textDocument_rename()<CR>
-"" nnoremap <leader>lf :call LanguageClient#textDocument_formatting()<CR>
-"" nnoremap <leader>lt :call LanguageClient#textDocument_typeDefinition()<CR>
-"" nnoremap <leader>lx :call LanguageClient#textDocument_references()<CR>
-"" nnoremap <leader>la :call LanguageClient_workspace_applyEdit()<CR>
-"" nnoremap <leader>lc :call LanguageClient#textDocument_completion()<CR>
-"" nnoremap <leader>lh :call LanguageClient#textDocument_hover()<CR>
-"" nnoremap <leader>ls :call LanguageClient_textDocument_documentSymbol()<CR>
-"" nnoremap <leader>lm :call LanguageClient_contextMenu()<CR>
-""
-"" " set formatexpr=LanguageClient#textDocument_rangeFormatting_sync()<CR>
-"" let g:LanguageClient_useVirtualText = "CodeLens"
-"" " always use preview window (or float) for LSP hover
-"" let g:LanguageClient_hoverPreview = "Always"
-""
-"" " for debugging
-"" " let g:LanguageClient_loggingLevel = 'DEBUG'
-"" " let g:LanguageClient_loggingFile = 'lang-client.log'
-
-"" use coc instead " linter
-"" use coc instead let g:ale_cpp_clangtidy_header_suffixes = ['h', 'hpp', 'hxx', 'tcc']
-"" use coc instead let g:ale_javascript_eslint_executable='eslint_d'
-"" use coc instead let g:ale_javascript_eslint_use_global = 1
-"" use coc instead " You should not turn this setting on if you wish to use ALE as a completion
-"" use coc instead " source for other completion plugins, like Deoplete.
-"" use coc instead " " let g:ale_completion_enabled = 1
-"" use coc instead " let g:ale_virtualtext_cursor = 1
-"" use coc instead " let g:ale_cursor_detail = 1
-"" use coc instead let g:ale_echo_cursor = 1
-"" use coc instead " let g:ale_lint_on_text_changed = 0
-"" use coc instead " let g:ale_lint_on_insert_leave = 0
-"" use coc instead let g:ale_set_loclist = 0 " I like to use the location list for other things
-"" use coc instead let g:ale_set_quickfix = 0
-"" use coc instead " let g:ale_set_balloons = 1
-"" use coc instead nmap <silent> <leader>aj :ALENext<cr>
-"" use coc instead nmap <silent> <leader>ak :ALEPrevious<cr>
-"" use coc instead Plug 'w0rp/ale'
-"" use coc instead let g:ale_fixers = {
-"" use coc instead       \   'javascript': ['eslint'],
-"" use coc instead       \   'javascript.jsx': ['eslint'],
-"" use coc instead       \   'javascriptreact': ['eslint'],
-"" use coc instead       \   'typescript': ['eslint'],
-"" use coc instead       \   'typescript.jsx': ['eslint'],
-"" use coc instead       \   'typescriptreact': ['eslint'],
-"" use coc instead       \}
-"" use coc instead " Arrays below had: [... , 'tsserver']
-"" use coc instead let g:ale_linters = {
-"" use coc instead     \   'javascript': ['eslint'],
-"" use coc instead     \   'javascript.jsx': ['eslint'],
-"" use coc instead     \   'javascriptreact': ['eslint'],
-"" use coc instead     \   'typescript': ['eslint'],
-"" use coc instead     \   'typescript.jsx': ['eslint'],
-"" use coc instead     \   'typescriptreact': ['eslint'],
-"" use coc instead     \ 'rust': [],
-"" use coc instead     \ 'cpp': [],
-"" use coc instead     \}
-"" use coc instead " \ 'cs': ['OmniSharp'],
-"" use coc instead "\   'cpp': ['clang', 'cppcheck', 'gcc', 'clang-format'],
-
-
-"" TRY coc " see deoplete's README.md
-"" TRY coc if has('nvim')
-"" TRY coc   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-"" TRY coc else
-"" TRY coc   Plug 'Shougo/deoplete.nvim'
-"" TRY coc   " Neovim compatibility provided as first 2 plugins
-"" TRY coc endif
-"" TRY coc " let g:deoplete#enable_smart_case = 1
-"" TRY coc let g:deoplete#enable_at_startup = 1
-"" TRY coc " set completeopt=menuone,preview,longest,noselect
-
-" --- COC ---
-
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-set shortmess+=c
-"" DISABLE " Use tab for trigger completion with characters ahead and navigate.
-"" DISABLE " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-"" DISABLE " other plugin before putting this into your config.
-"" DISABLE inoremap <silent><expr> <TAB>
-"" DISABLE       \ pumvisible() ? "\<C-n>" :
-"" DISABLE       \ <SID>check_back_space() ? "\<TAB>" :
-"" DISABLE       \ coc#refresh()
-"" DISABLE inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-" Use <c-space> to trigger completion. (now Control Space)
-if has('nvim')
-  inoremap <silent><expr> <c-space> coc#refresh()
-  inoremap <silent><expr>  coc#refresh()
-else
-  inoremap <silent><expr> <c-@> coc#refresh()
-endif
-
-" Use `[g` and `]g` to navigate diagnostics
-" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
-
-" GoTo code navigation.
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-
-" Use K to show documentation in preview window.
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  elseif (coc#rpc#ready())
-    call CocActionAsync('doHover')
-  else
-    execute '!' . &keywordprg . " " . expand('<cword>')
-  endif
-endfunction
-
-
-" Use `[g` and `]g` to navigate diagnostics
-" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
-
-Plug 'prettier/vim-prettier'
-
-" GoTo code navigation.
-nmap <silent> <leader>ld <Plug>(coc-definition)
-nmap <silent> <leader>lt <Plug>(coc-type-definition)
-nmap <silent> <leader>p :%! prettier --stdin-filepath %<CR>
-nmap <leader>lf :w<CR>:CocCommand eslint.executeAutofix<CR><leader>p
-nmap <silent> <leader>li <Plug>(coc-implementation)
-nmap <silent> <leader>lx <Plug>(coc-references)
-nmap <silent> <leader>lr <Plug>(coc-rename)
-nmap <silent> <leader>lc <Plug>(coc-fix-current)
-nmap <leader>lm <Plug>(coc-codeaction)
-xmap <leader>lm  <Plug>(coc-codeaction-selected)
-
-" Use K to show documentation in preview window.
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  elseif (coc#rpc#ready())
-    call CocActionAsync('doHover')
-  else
-    execute '!' . &keywordprg . " " . expand('<cword>')
-  endif
-endfunction
-
-augroup coqjump
-  autocmd!
-  " " Setup formatexpr specified filetype(s).
-  " autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-  " Update signature help on jump placeholder.
-  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-augroup end
-
-nmap <leader>l[o :call CocAction('showOutline')<CR>
-nmap <leader>l]o :call CocAction('hideOutline')<CR>
-
-" Plug 'Shougo/denite.nvim'
-
-" " Define mappings
-" autocmd FileType denite call s:denite_my_settings()
-" function! s:denite_my_settings() abort
-"   nnoremap <silent><buffer><expr> <CR> denite#do_map('do_action')
-"   nnoremap <silent><buffer><expr> d denite#do_map('do_action', 'delete')
-"   nnoremap <silent><buffer><expr> p denite#do_map('do_action', 'preview')
-"   nnoremap <silent><buffer><expr> q denite#do_map('quit')
-"   nnoremap <silent><buffer><expr> i denite#do_map('open_filter_buffer')
-"   nnoremap <silent><buffer><expr> <Space> denite#do_map('toggle_select').'j'
-" endfunction
-"
-"" Plug 'OmniSharp/omnisharp-vim'
-"" let g:OmniSharp_timeout = 5
-"" set completeopt=longest,menuone,preview
-"" augroup omnisharp_commands
-""     autocmd!
-""     " DISABLE - idonlikit
-""     " " Show type information automatically when the cursor stops moving
-""     " autocmd CursorHold *.cs call OmniSharp#TypeLookupWithoutDocumentation()
-""     " The following commands are contextual, based on the cursor position.
-""     autocmd FileType cs nnoremap <buffer> gd :OmniSharpGotoDefinition<CR>
-""     autocmd FileType cs nnoremap <buffer> <Leader>sfi :OmniSharpFindImplementations<CR>
-""     autocmd FileType cs nnoremap <buffer> <Leader>sfs :OmniSharpFindSymbol<CR>
-""     autocmd FileType cs nnoremap <buffer> <Leader>sfu :OmniSharpFindUsages<CR>
-""     " Finds members in the current buffer
-""     autocmd FileType cs nnoremap <buffer> <Leader>sfm :OmniSharpFindMembers<CR>
-""     autocmd FileType cs nnoremap <buffer> <Leader>sfx :OmniSharpFixUsings<CR>
-""     autocmd FileType cs nnoremap <buffer> <Leader>stt :OmniSharpTypeLookup<CR>
-""     autocmd FileType cs nnoremap <buffer> <Leader>sdc :OmniSharpDocumentation<CR>
-""     autocmd FileType cs nnoremap <buffer> K :OmniSharpDocumentation<CR>
-""     autocmd FileType cs nnoremap <buffer> <C-\> :OmniSharpSignatureHelp<CR>
-""     autocmd FileType cs inoremap <buffer> <C-\> <C-o>:OmniSharpSignatureHelp<CR>
-""     " Navigate up and down by method/property/field
-""     autocmd FileType cs nnoremap <buffer> <C-k> :OmniSharpNavigateUp<CR>
-""     autocmd FileType cs nnoremap <buffer> <C-j> :OmniSharpNavigateDown<CR>
-"" augroup end
-"" " Add syntax highlighting for types and interfaces
-"" nnoremap <Leader>sht :OmniSharpHighlightTypes<CR>
 
 Plug 'maksimr/vim-jsbeautify'
 
@@ -560,15 +266,11 @@ Plug 'neoclide/jsonc.vim'
 
 " autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.yaml,*.html Prettier
 
-" DISABLE lsp+cquery autocomplete good enough Plug 'zchee/deoplete-clang'
-" DISABLE lsp+cquery autocomplete good enough let g:deoplete#sources#clang#libclang_path='/usr/lib/libclang.so'
-" DISABLE lsp+cquery autocomplete good enough let g:deoplete#sources#clang#clang_header='/usr/lib/clang'
-
-" Uses clang-format to format code with Vim
-Plug 'rhysd/vim-clang-format'
-autocmd FileType c,cpp,objc nnoremap <buffer><Leader>cf :%ClangFormat<CR>
-autocmd FileType c,cpp,objc vnoremap <buffer><Leader>cf :ClangFormat<CR>
-nmap <Leader>C :ClangFormatAutoToggle<CR>
+" " Uses clang-format to format code with Vim
+" Plug 'rhysd/vim-clang-format'
+" autocmd FileType c,cpp,objc nnoremap <buffer><Leader>cf :%ClangFormat<CR>
+" autocmd FileType c,cpp,objc vnoremap <buffer><Leader>cf :ClangFormat<CR>
+" nmap <Leader>C :ClangFormatAutoToggle<CR>
 
 " au BufNewFile,BufRead *.xaml        setf xml
 
@@ -586,9 +288,11 @@ augroup ledger
   autocmd!
   let g:ledger_align_at=50
   autocmd FileType ledger nmap <Leader>lf :%LedgerAlign<cr>
-  " autocmd FileType ledger nmap <Leader>le :call ledger#entry()<cr>
-  autocmd FileType ledger nmap <Leader>le :.! xargs ledger xact<cr>
+  autocmd FileType ledger nmap <Leader>le :call ledger#entry()<cr>
+  " autocmd FileType ledger nmap <Leader>le :.! xargs ledger xact<cr>
 augroup end
+nmap <Leader>[c :call ledger#transaction_post_state_set(line('.'), '*')<cr>
+nmap <Leader>]c :call ledger#transaction_post_state_set(line('.'), ' ')<cr>
 
 call plug#end()
 
