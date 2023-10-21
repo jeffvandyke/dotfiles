@@ -26,6 +26,12 @@ endif
 
 map <space> <leader>
 
+" let g:clipboard = 'xclip'
+
+set nohidden
+
+command Bd :up | %bd | e#
+
 let g:netrw_liststyle = 3  " Use tree view
 " let g:netrw_winsize = '30' " Smaller default window size
 let g:netrw_altv = '1'
@@ -39,7 +45,7 @@ set shiftwidth=4
 set expandtab
 
 set number
-set relativenumber
+" set relativenumber
 au BufReadPost quickfix setlocal norelativenumber
 set wrap
 set linebreak
@@ -71,7 +77,7 @@ set autowriteall
 
 " custom mappings
 nmap ZW :w<cr>
-nmap <leader>f :Ack<space>
+nmap <leader>f :Ack!<space>
 " Joins paragraphs with "^A" control characters and resets them back.
 nnoremap <Leader>[j :%s/\(.\+\)\n/\1/g<cr>:noh<cr>
 vnoremap <Leader>[j  :s/\(.\+\)\n/\1/g<cr>:noh<cr>
@@ -116,12 +122,17 @@ autocmd vimenter * ++nested colorscheme gruvbox
 " Plug 'lifepillar/vim-solarized8'
 " " settings below plug#end
 
+Plug 'mbbill/undotree'
+nnoremap <F5> :UndotreeToggle<CR>
+
 Plug 'vim-airline/vim-airline'
-let g:airline_section_a = ''
+" let g:airline_section_a = airline#section#create(['mode'])
+let g:airline_section_b = ''
+let g:airline_section_y = ''
 let g:airline_section_error = ''
 let g:airline_section_warning = ''
-let g:airline#extensions#branch#displayed_head_limit = 15
-let g:airline#extensions#branch#format = 2
+" let g:airline#extensions#branch#displayed_head_limit = 15
+" let g:airline#extensions#branch#format = 2
 
 " Tmux integration
 Plug 'christoomey/vim-tmux-navigator'
@@ -136,8 +147,8 @@ nnoremap <silent> <M-l> :TmuxNavigateRight<cr>
 " ---- General Tools -------------------
 
 Plug 'tpope/vim-unimpaired'
-nmap [of :set foldmethod=syntax<cr>
-nmap ]of :set foldmethod=manual<cr>
+nmap [of :setlocal foldmethod=syntax<cr>
+nmap ]of :setlocal foldmethod=manual<cr>
 nmap [oa :ALEEnable<cr>
 nmap ]oa :ALEDisable<cr>
 
@@ -152,7 +163,7 @@ nmap <leader>dr :LinediffReset<cr>
 " ---- Multi-file level tools ----------
 
 " Depends on fzf being installed
-" Plug '/usr/share/vim/vimfiles'
+" Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 nmap <Leader>t :Files<CR>
@@ -188,6 +199,7 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 Plug 'Xuyuanp/nerdtree-git-plugin'
 
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-rhubarb'
 
 Plug 'airblade/vim-gitgutter'
 let g:gitgutter_diff_args = '-M'
@@ -231,10 +243,10 @@ Plug 'chrisbra/csv.vim'
 " ---- Language-intelligent tools ------
 
 " Tags management
-Plug 'ludovicchabant/vim-gutentags'
-let g:gutentags_ctags_exclude = ['*.xml', '*node_modules*', 'assets/webhelp/*', '*buildroot/output/*', '*client/build/*']
+" Plug 'ludovicchabant/vim-gutentags'
+" let g:gutentags_ctags_exclude = ['*node_modules*', 'assets/webhelp/*', '*buildroot/output/*', '*client/build/*']
 " let g:gutentags_project_root = ['package.json']
-nmap <C-]> g<C-]>
+" nmap <C-]> g<C-]>
 
 Plug 'majutsushi/tagbar'
 command! TT TagbarToggle
@@ -246,6 +258,8 @@ command! TT TagbarToggle
 
 augroup typescript_bindings
   autocmd!
+  autocmd FileType javascript call s:setup_ts_bundings()
+  autocmd FileType javascriptreact call s:setup_ts_bundings()
   autocmd FileType typescript call s:setup_ts_bundings()
   autocmd FileType typescriptreact call s:setup_ts_bundings()
   function! s:setup_ts_bundings() abort
@@ -269,7 +283,7 @@ augroup typescript_bindings
     " nnoremap K :ALEDocumentation<CR>
     " nnoremap <leader>ld :ALEGoToDefinition<CR>
     " nnoremap <leader>lr :ALERename<CR>
-    nnoremap <leader>lf :Prettier<CR>
+    " nnoremap <leader>lf :w<CR>:CocCommand eslint.executeAutofix<CR>:Prettier<CR>
     " nnoremap <leader>lt :ALEGoToTypeDefinition<CR>
     " nnoremap <leader>lx :ALEFindReferences<CR>
     " " nnoremap <leader>la :call LanguageClient_workspace_applyEdit()<CR>
@@ -279,17 +293,6 @@ augroup typescript_bindings
     " " nnoremap <leader>lm :call LanguageClient_contextMenu()<CR>
     " " set omnifunc=ale#completion#OmniFunc
 
-
-"" nnoremap <leader>ld :call LanguageClient#textDocument_definition()<CR>
-"" nnoremap <leader>lr :call LanguageClient#textDocument_rename()<CR>
-"" nnoremap <leader>lf :call LanguageClient#textDocument_formatting()<CR>
-"" nnoremap <leader>lt :call LanguageClient#textDocument_typeDefinition()<CR>
-"" nnoremap <leader>lx :call LanguageClient#textDocument_references()<CR>
-"" nnoremap <leader>la :call LanguageClient_workspace_applyEdit()<CR>
-"" nnoremap <leader>lc :call LanguageClient#textDocument_completion()<CR>
-"" nnoremap <leader>lh :call LanguageClient#textDocument_hover()<CR>
-"" nnoremap <leader>ls :call LanguageClient_textDocument_documentSymbol()<CR>
-"" nnoremap <leader>lm :call LanguageClient_contextMenu()<CR>
 
   endfunction
 augroup end
@@ -363,45 +366,45 @@ augroup end
 "" " let g:LanguageClient_loggingLevel = 'DEBUG'
 "" " let g:LanguageClient_loggingFile = 'lang-client.log'
 
-" linter
-let g:ale_cpp_clangtidy_header_suffixes = ['h', 'hpp', 'hxx', 'tcc']
-let g:ale_javascript_eslint_executable='eslint_d'
-let g:ale_javascript_eslint_use_global = 1
-" You should not turn this setting on if you wish to use ALE as a completion
-" source for other completion plugins, like Deoplete.
-" " let g:ale_completion_enabled = 1
-" let g:ale_virtualtext_cursor = 1
-" let g:ale_cursor_detail = 1
-let g:ale_echo_cursor = 1
-" let g:ale_lint_on_text_changed = 0
-" let g:ale_lint_on_insert_leave = 0
-let g:ale_set_loclist = 0 " I like to use the location list for other things
-let g:ale_set_quickfix = 0
-" let g:ale_set_balloons = 1
-nmap <silent> <leader>aj :ALENext<cr>
-nmap <silent> <leader>ak :ALEPrevious<cr>
-Plug 'dense-analysis/ale'
-let g:ale_fixers = {
-      \   'javascript': ['eslint'],
-      \   'javascript.jsx': ['eslint'],
-      \   'javascriptreact': ['eslint'],
-      \   'typescript': ['eslint'],
-      \   'typescript.jsx': ['eslint'],
-      \   'typescriptreact': ['eslint'],
-      \}
-" Arrays below had: [... , 'tsserver']
-let g:ale_linters = {
-    \   'javascript': ['eslint'],
-    \   'javascript.jsx': ['eslint'],
-    \   'javascriptreact': ['eslint'],
-    \   'typescript': ['eslint'],
-    \   'typescript.jsx': ['eslint'],
-    \   'typescriptreact': ['eslint'],
-    \ 'rust': [],
-    \ 'cpp': [],
-    \}
-" \ 'cs': ['OmniSharp'],
-"\   'cpp': ['clang', 'cppcheck', 'gcc', 'clang-format'],
+"" use coc instead " linter
+"" use coc instead let g:ale_cpp_clangtidy_header_suffixes = ['h', 'hpp', 'hxx', 'tcc']
+"" use coc instead let g:ale_javascript_eslint_executable='eslint_d'
+"" use coc instead let g:ale_javascript_eslint_use_global = 1
+"" use coc instead " You should not turn this setting on if you wish to use ALE as a completion
+"" use coc instead " source for other completion plugins, like Deoplete.
+"" use coc instead " " let g:ale_completion_enabled = 1
+"" use coc instead " let g:ale_virtualtext_cursor = 1
+"" use coc instead " let g:ale_cursor_detail = 1
+"" use coc instead let g:ale_echo_cursor = 1
+"" use coc instead " let g:ale_lint_on_text_changed = 0
+"" use coc instead " let g:ale_lint_on_insert_leave = 0
+"" use coc instead let g:ale_set_loclist = 0 " I like to use the location list for other things
+"" use coc instead let g:ale_set_quickfix = 0
+"" use coc instead " let g:ale_set_balloons = 1
+"" use coc instead nmap <silent> <leader>aj :ALENext<cr>
+"" use coc instead nmap <silent> <leader>ak :ALEPrevious<cr>
+"" use coc instead Plug 'w0rp/ale'
+"" use coc instead let g:ale_fixers = {
+"" use coc instead       \   'javascript': ['eslint'],
+"" use coc instead       \   'javascript.jsx': ['eslint'],
+"" use coc instead       \   'javascriptreact': ['eslint'],
+"" use coc instead       \   'typescript': ['eslint'],
+"" use coc instead       \   'typescript.jsx': ['eslint'],
+"" use coc instead       \   'typescriptreact': ['eslint'],
+"" use coc instead       \}
+"" use coc instead " Arrays below had: [... , 'tsserver']
+"" use coc instead let g:ale_linters = {
+"" use coc instead     \   'javascript': ['eslint'],
+"" use coc instead     \   'javascript.jsx': ['eslint'],
+"" use coc instead     \   'javascriptreact': ['eslint'],
+"" use coc instead     \   'typescript': ['eslint'],
+"" use coc instead     \   'typescript.jsx': ['eslint'],
+"" use coc instead     \   'typescriptreact': ['eslint'],
+"" use coc instead     \ 'rust': [],
+"" use coc instead     \ 'cpp': [],
+"" use coc instead     \}
+"" use coc instead " \ 'cs': ['OmniSharp'],
+"" use coc instead "\   'cpp': ['clang', 'cppcheck', 'gcc', 'clang-format'],
 
 
 "" TRY coc " see deoplete's README.md
@@ -433,12 +436,18 @@ function! s:check_back_space() abort
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-" Use <c-space> to trigger completion.
+" Use <c-space> to trigger completion. (now Control Space)
 if has('nvim')
   inoremap <silent><expr> <c-space> coc#refresh()
+  inoremap <silent><expr>  coc#refresh()
 else
   inoremap <silent><expr> <c-@> coc#refresh()
 endif
+
+" Use `[g` and `]g` to navigate diagnostics
+" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
 
 " GoTo code navigation.
 nmap <silent> gd <Plug>(coc-definition)
@@ -465,14 +474,19 @@ endfunction
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
 nmap <silent> ]g <Plug>(coc-diagnostic-next)
 
+Plug 'prettier/vim-prettier'
+
 " GoTo code navigation.
 nmap <silent> <leader>ld <Plug>(coc-definition)
 nmap <silent> <leader>lt <Plug>(coc-type-definition)
+nmap <silent> <leader>p :%! prettier --stdin-filepath %<CR>
+nmap <leader>lf :w<CR>:CocCommand eslint.executeAutofix<CR><leader>p
 nmap <silent> <leader>li <Plug>(coc-implementation)
 nmap <silent> <leader>lx <Plug>(coc-references)
 nmap <silent> <leader>lr <Plug>(coc-rename)
 nmap <silent> <leader>lc <Plug>(coc-fix-current)
-nmap <leader>lm :CocFix<cr>
+nmap <leader>lm <Plug>(coc-codeaction)
+xmap <leader>lm  <Plug>(coc-codeaction-selected)
 
 " Use K to show documentation in preview window.
 nnoremap <silent> K :call <SID>show_documentation()<CR>
@@ -495,17 +509,22 @@ augroup coqjump
   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup end
 
-"" nnoremap <leader>ld :call LanguageClient#textDocument_definition()<CR>
-"" nnoremap <leader>lr :call LanguageClient#textDocument_rename()<CR>
-"" nnoremap <leader>lf :call LanguageClient#textDocument_formatting()<CR>
-"" nnoremap <leader>lt :call LanguageClient#textDocument_typeDefinition()<CR>
-"" nnoremap <leader>lx :call LanguageClient#textDocument_references()<CR>
-"" nnoremap <leader>la :call LanguageClient_workspace_applyEdit()<CR>
-"" nnoremap <leader>lc :call LanguageClient#textDocument_completion()<CR>
-"" nnoremap <leader>lh :call LanguageClient#textDocument_hover()<CR>
-"" nnoremap <leader>ls :call LanguageClient_textDocument_documentSymbol()<CR>
-"" nnoremap <leader>lm :call LanguageClient_contextMenu()<CR>
+nmap <leader>l[o :call CocAction('showOutline')<CR>
+nmap <leader>l]o :call CocAction('hideOutline')<CR>
 
+" Plug 'Shougo/denite.nvim'
+
+" " Define mappings
+" autocmd FileType denite call s:denite_my_settings()
+" function! s:denite_my_settings() abort
+"   nnoremap <silent><buffer><expr> <CR> denite#do_map('do_action')
+"   nnoremap <silent><buffer><expr> d denite#do_map('do_action', 'delete')
+"   nnoremap <silent><buffer><expr> p denite#do_map('do_action', 'preview')
+"   nnoremap <silent><buffer><expr> q denite#do_map('quit')
+"   nnoremap <silent><buffer><expr> i denite#do_map('open_filter_buffer')
+"   nnoremap <silent><buffer><expr> <Space> denite#do_map('toggle_select').'j'
+" endfunction
+"
 "" Plug 'OmniSharp/omnisharp-vim'
 "" let g:OmniSharp_timeout = 5
 "" set completeopt=longest,menuone,preview
@@ -530,15 +549,16 @@ augroup end
 ""     " Navigate up and down by method/property/field
 ""     autocmd FileType cs nnoremap <buffer> <C-k> :OmniSharpNavigateUp<CR>
 ""     autocmd FileType cs nnoremap <buffer> <C-j> :OmniSharpNavigateDown<CR>
-"" augroup END
+"" augroup end
 "" " Add syntax highlighting for types and interfaces
 "" nnoremap <Leader>sht :OmniSharpHighlightTypes<CR>
 
 Plug 'maksimr/vim-jsbeautify'
 
-Plug 'prettier/vim-prettier'
+" Allow comments in json
+Plug 'neoclide/jsonc.vim'
 
-"" DISABLE " autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.yaml,*.html Prettier
+" autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.yaml,*.html Prettier
 
 " DISABLE lsp+cquery autocomplete good enough Plug 'zchee/deoplete-clang'
 " DISABLE lsp+cquery autocomplete good enough let g:deoplete#sources#clang#libclang_path='/usr/lib/libclang.so'
@@ -558,8 +578,6 @@ let g:javascript_plugin_flow = 1
 let g:jsx_ext_required = 1 " Don't mix JSX in normal JS files, needed for Flow
 au BufRead,BufNewFile,BufReadPost *.js.flow set filetype=javascript
 
-" Plug 'mhartington/nvim-typescript', {'do': './install.sh'}
-
 Plug 'jparise/vim-graphql'
 
 Plug 'ledger/vim-ledger'
@@ -574,14 +592,11 @@ augroup end
 
 call plug#end()
 
-" Post-plugin options
-
-" settings for Solarized colorscheme
+" settings for colorscheme
 set termguicolors
 set background=light
 " colorscheme solarized8
 
 " Manual options
 " call deoplete#custom#option('auto_complete', v:false)
-" call deoplete#enable_logging('DEBUG', '/home/jeff/deoplete-log.txt')
 
