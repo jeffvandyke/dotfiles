@@ -43,6 +43,8 @@ M.mason = {
 
 -- git support in nvimtree
 M.nvimtree = {
+  -- Jeff V - vim-rhubarb to work
+  disable_netrw = false,
   git = {
     enable = true,
   },
