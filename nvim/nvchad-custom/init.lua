@@ -15,6 +15,7 @@ opt.scrolloff = 2
 opt.wrap = true
 opt.linebreak = true
 opt.showbreak = "▶▶━┫"
+opt.ruler = true
 
 opt.inccommand = "nosplit"
 

@@ -1,4 +1,4 @@
-local overrides = require "custom.configs.overrides"
+local overrides = require("custom.configs.overrides")
 
 ---@type NvPluginSpec[]
 local plugins = {
@@ -12,13 +12,13 @@ local plugins = {
       {
         "jose-elias-alvarez/null-ls.nvim",
         config = function()
-          require "custom.configs.null-ls"
+          require("custom.configs.null-ls")
         end,
       },
     },
     config = function()
-      require "plugins.configs.lspconfig"
-      require "custom.configs.lspconfig"
+      require("plugins.configs.lspconfig")
+      require("custom.configs.lspconfig")
     end, -- Override to setup mason-lspconfig
   },
 
@@ -60,9 +60,9 @@ local plugins = {
     version = "*", -- Use for stability; omit to use `main` branch for the latest features
     lazy = false,
     config = function()
-      require("nvim-surround").setup {
+      require("nvim-surround").setup({
         -- Configuration here, or leave empty to use defaults
-      }
+      })
     end,
   },
 
@@ -78,7 +78,7 @@ local plugins = {
     "nvim-telescope/telescope.nvim",
     dependencies = { "xiyaowong/telescope-emoji.nvim" },
     opts = function()
-      local conf = require "plugins.configs.telescope"
+      local conf = require("plugins.configs.telescope")
       table.insert(conf.extensions_list, "emoji")
       return conf
     end,
@@ -88,10 +88,30 @@ local plugins = {
     "xiyaowong/telescope-emoji.nvim",
   },
 
-  { "duane9/nvim-rg", lazy = false },
+  {
+    "mileszs/ack.vim",
+    lazy = false,
+    init = function()
+      vim.g.ackprg = "rg --vimgrep"
+      vim.keymap.set("n", "<leader>a", ":Ack!<space>")
+    end,
+  },
 
   { "tpope/vim-fugitive", lazy = false },
   { "tpope/vim-rhubarb", lazy = false },
+  {
+    "alexghergh/nvim-tmux-navigation",
+    lazy = false,
+    config = true,
+    opts = {
+      keybindings = {
+        left = "<A-h>",
+        down = "<A-j>",
+        up = "<A-k>",
+        right = "<A-l>",
+      },
+    },
+  },
   { "github/copilot.vim", lazy = false },
 
   -- To make a plugin not be loaded

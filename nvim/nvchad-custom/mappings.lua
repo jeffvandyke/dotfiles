@@ -8,6 +8,10 @@ M.disabled = {
     ["<Up>"] = "",
     ["<Down>"] = "",
     ["<C-c>"] = "",
+    ["<A-h>"] = "",
+    ["<A-j>"] = "",
+    ["<A-k>"] = "",
+    ["<A-l>"] = "",
   },
   v = {
     ["j"] = "",
@@ -38,9 +42,9 @@ M.gitsigns = {
       function()
         require("gitsigns").stage_hunk()
       end,
-      "Stage Hunk"
-    }
-  }
+      "Stage Hunk",
+    },
+  },
 }
 
 -- more keybinds!
