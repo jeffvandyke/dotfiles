@@ -23,6 +23,9 @@ local sources = {
   -- Lua
   b.formatting.stylua,
 
+  -- Python
+  b.formatting.black,
+
   -- cpp
   b.formatting.clang_format,
 }

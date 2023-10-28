@@ -3,8 +3,10 @@ local capabilities = require("plugins.configs.lspconfig").capabilities
 
 local lspconfig = require "lspconfig"
 
+-- See :help lspconfig-all
+
 -- if you just want default config for the servers then put them in a table
-local servers = { "html", "cssls", "tsserver", "clangd", "rubocop", "ruby_ls" }
+local servers = { "html", "cssls", "tsserver", "clangd", "rubocop", "ruby_ls", "pylsp" }
 
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {

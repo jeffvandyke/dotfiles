@@ -2,17 +2,18 @@ local M = {}
 
 M.treesitter = {
   ensure_installed = {
-    "vim",
-    "lua",
-    "html",
-    "css",
-    "javascript",
-    "typescript",
-    "tsx",
     "c",
+    "css",
+    "html",
+    "javascript",
+    "ledger",
+    "lua",
     "markdown",
     "markdown_inline",
     "ruby",
+    "tsx",
+    "typescript",
+    "vim",
   },
   indent = {
     enable = true,
@@ -50,7 +51,7 @@ M.nvimtree = {
   },
 
   view = {
-    width = 40
+    width = 40,
   },
 
   renderer = {
