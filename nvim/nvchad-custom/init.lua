@@ -47,3 +47,9 @@ vim.api.nvim_create_autocmd({ "VimResized" }, {
   pattern = { "*" },
   command = "wincmd =",
 })
+
+-- Undoes NvChad's effect of clearing CursorLine
+vim.api.nvim_create_autocmd({ "VimEnter" }, {
+  pattern = { "*" },
+  command = "highlight link CursorLine CursorColumn",
+})
