@@ -114,6 +114,30 @@ local plugins = {
   },
   { "github/copilot.vim", lazy = false },
 
+  {
+    "ledger/vim-ledger",
+    event = "BufEnter *.ledger",
+    init = function()
+      vim.api.nvim_create_autocmd({ "BufEnter" }, {
+        pattern = { "*.ledger" },
+        callback = function()
+          vim.keymap.set("n", "<leader>le", function()
+            local expr = vim.fn.getline(".")
+            vim.cmd(".delete")
+            vim.cmd("w")
+            local cmd = string.format("ledger entry %s", expr)
+            local output = vim.fn.system(cmd)
+            vim.fn.setreg("", output, "c")
+            vim.cmd("put")
+          end)
+          vim.keymap.set("n", "<leader>fm", function()
+            vim.cmd("LedgerAlignBuffer")
+            end, { buffer = 0 })
+        end,
+      })
+    end,
+  },
+
   -- To make a plugin not be loaded
   -- {
   --   "NvChad/nvim-colorizer.lua",
