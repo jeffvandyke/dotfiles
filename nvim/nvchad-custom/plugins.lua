@@ -85,10 +85,6 @@ local plugins = {
   },
 
   {
-    "xiyaowong/telescope-emoji.nvim",
-  },
-
-  {
     "mileszs/ack.vim",
     lazy = false,
     init = function()
@@ -104,6 +100,7 @@ local plugins = {
     lazy = false,
     config = true,
     opts = {
+      disable_when_zoomed = true,
       keybindings = {
         left = "<A-h>",
         down = "<A-j>",
