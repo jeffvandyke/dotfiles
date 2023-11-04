@@ -10,18 +10,25 @@ local opt = vim.opt
 
 opt.cursorcolumn = true
 opt.cursorline = true
+opt.cursorlineopt = "both"
 opt.scrolloff = 2
+
+opt.tabstop = 4
+opt.shiftwidth=4
+opt.expandtab = true
 
 opt.wrap = true
 opt.linebreak = true
 opt.showbreak = "▶▶━┫"
 opt.ruler = true
+opt.rulerformat="%15(%c%V %p%%%)"
 
 opt.inccommand = "nosplit"
 
 opt.swapfile = false
 
 -- override NvChad to default
+opt.cursorlineopt = "both"
 opt.clipboard = ""
 opt.laststatus = 2
 opt.splitbelow = false
@@ -30,6 +37,7 @@ opt.fillchars = { eob = "~" }
 opt.ignorecase = false
 opt.smartcase = false
 opt.whichwrap = "b,s"
+opt.softtabstop = 0
 
 -- Instantly save and load
 opt.autoread = true
