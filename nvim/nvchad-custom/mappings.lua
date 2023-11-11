@@ -36,7 +36,7 @@ M.general = {
     -- [";"] = { ":", "enter command mode", opts = { nowait = true } },
     ["ZW"] = { ":w<cr>" },
     -- ["<leader>f"]
-    ["gx"] = { [[:execute '!open ' . shellescape(expand('<cfile>'), 1)<CR>]] },
+    ["gx"] = { [[:silent! execute '!open ' . shellescape(expand('<cfile>'), 1)<CR>]] },
   },
   v = {
     [">"] = { ">gv", "indent" },
