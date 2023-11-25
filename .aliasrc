@@ -1,0 +1,19 @@
+#!/usr/bin/env sh
+
+LEDGER_PATH=/home/jeff/Personal/Financing/Accounting
+export LEDGER_FILE=$LEDGER_PATH/jeff.ledger
+export LEDGER_DATE_FORMAT="%Y-%m-%d"
+alias lge="(cd $LEDGER_PATH; nvim $(date +%Y).ledger -c 99999)"
+alias lg="ledger --pedantic"
+
+LEDGER_VCW_PATH=~/work/VCW/Finance/Accounting
+alias lgv="ledger --pedantic -f $LEDGER_VCW_PATH/vcw.ledger"
+alias lgve="(cd $LEDGER_VCW_PATH; nvim vcw.ledger -c 99999)"
+
+alias xo=xdg-open
+alias open=xdg-open
+alias vi=nvim
+alias ytd=youtube-dl
+alias ytfd=youtube-full-dl
+alias rr=ranger
+alias nv=nordvpn
