@@ -3,151 +3,168 @@ local overrides = require("custom.configs.overrides")
 ---@type NvPluginSpec[]
 local plugins = {
 
-  -- Override plugin definition options
+    -- Override plugin definition options
 
-  {
-    "neovim/nvim-lspconfig",
-    dependencies = {
-      -- format & linting
-      {
-        "jose-elias-alvarez/null-ls.nvim",
+    {
+        "neovim/nvim-lspconfig",
+        dependencies = {
+            -- format & linting
+            {
+                "jose-elias-alvarez/null-ls.nvim",
+                config = function()
+                    require("custom.configs.null-ls")
+                end,
+            },
+        },
         config = function()
-          require("custom.configs.null-ls")
+            require("plugins.configs.lspconfig")
+            require("custom.configs.lspconfig")
+        end, -- Override to setup mason-lspconfig
+    },
+
+    -- override plugin configs
+    {
+        "williamboman/mason.nvim",
+        opts = overrides.mason,
+    },
+
+    {
+        "nvim-treesitter/nvim-treesitter",
+        opts = overrides.treesitter,
+    },
+
+    {
+        "nvim-tree/nvim-tree.lua",
+        opts = overrides.nvimtree,
+    },
+
+    -- -- Install a plugin
+    -- {
+    --   "max397574/better-escape.nvim",
+    --   event = "InsertEnter",
+    --   config = function()
+    --     require("better_escape").setup()
+    --   end,
+    -- },
+
+    {
+        "tpope/vim-unimpaired",
+        lazy = false,
+    },
+    {
+        "tpope/vim-abolish",
+        lazy = false,
+    },
+    {
+        "kylechui/nvim-surround",
+        version = "*", -- Use for stability; omit to use `main` branch for the latest features
+        lazy = false,
+        config = function()
+            require("nvim-surround").setup({
+                -- Configuration here, or leave empty to use defaults
+            })
         end,
-      },
     },
-    config = function()
-      require("plugins.configs.lspconfig")
-      require("custom.configs.lspconfig")
-    end, -- Override to setup mason-lspconfig
-  },
 
-  -- override plugin configs
-  {
-    "williamboman/mason.nvim",
-    opts = overrides.mason,
-  },
-
-  {
-    "nvim-treesitter/nvim-treesitter",
-    opts = overrides.treesitter,
-  },
-
-  {
-    "nvim-tree/nvim-tree.lua",
-    opts = overrides.nvimtree,
-  },
-
-  -- -- Install a plugin
-  -- {
-  --   "max397574/better-escape.nvim",
-  --   event = "InsertEnter",
-  --   config = function()
-  --     require("better_escape").setup()
-  --   end,
-  -- },
-
-  {
-    "tpope/vim-unimpaired",
-    lazy = false,
-  },
-  {
-    "tpope/vim-abolish",
-    lazy = false,
-  },
-  {
-    "kylechui/nvim-surround",
-    version = "*", -- Use for stability; omit to use `main` branch for the latest features
-    lazy = false,
-    config = function()
-      require("nvim-surround").setup({
-        -- Configuration here, or leave empty to use defaults
-      })
-    end,
-  },
-
-  {
-    "NvChad/ui",
-    tabufline = {
-      lazy = false,
-      enabled = false,
+    {
+        "NvChad/ui",
+        tabufline = {
+            lazy = false,
+            enabled = false,
+        },
     },
-  },
 
-  {
-    "nvim-telescope/telescope.nvim",
-    dependencies = { "xiyaowong/telescope-emoji.nvim" },
-    opts = function()
-      local conf = require("plugins.configs.telescope")
-      table.insert(conf.extensions_list, "emoji")
-      return conf
-    end,
-  },
-
-  {
-    "mileszs/ack.vim",
-    lazy = false,
-    init = function()
-      vim.g.ackprg = "rg --vimgrep"
-      vim.keymap.set("n", "<leader>a", ":Ack!<space>")
-    end,
-  },
-
-  { "tpope/vim-fugitive", lazy = false },
-  { "tpope/vim-rhubarb", lazy = false },
-  {
-    "alexghergh/nvim-tmux-navigation",
-    lazy = false,
-    config = true,
-    opts = {
-      disable_when_zoomed = true,
-      keybindings = {
-        left = "<A-h>",
-        down = "<A-j>",
-        up = "<A-k>",
-        right = "<A-l>",
-      },
-    },
-  },
-  { "github/copilot.vim", lazy = false },
-
-  {
-    "ledger/vim-ledger",
-    event = "BufEnter *.ledger",
-    init = function()
-      vim.api.nvim_create_autocmd({ "BufEnter" }, {
-        pattern = { "*.ledger" },
-        callback = function()
-          vim.keymap.set("n", "<leader>le", function()
-            local expr = vim.fn.getline(".")
-            vim.cmd(".delete")
-            vim.cmd("w")
-            local cmd = string.format("ledger entry %s", expr)
-            local output = vim.fn.system(cmd)
-            vim.fn.setreg("", output, "c")
-            vim.cmd("put")
-          end)
-          vim.keymap.set("n", "<leader>fm", function()
-            vim.cmd("LedgerAlignBuffer")
-            end, { buffer = 0 })
+    {
+        "nvim-telescope/telescope.nvim",
+        dependencies = { "xiyaowong/telescope-emoji.nvim" },
+        opts = function()
+            local conf = require("plugins.configs.telescope")
+            table.insert(conf.extensions_list, "emoji")
+            return conf
         end,
-      })
-    end,
-  },
+    },
 
-  -- To make a plugin not be loaded
-  -- {
-  --   "NvChad/nvim-colorizer.lua",
-  --   enabled = false
-  -- },
+    {
+        "mileszs/ack.vim",
+        lazy = false,
+        init = function()
+            vim.g.ackprg = "rg --vimgrep"
+            vim.keymap.set("n", "<leader>a", ":Ack!<space>")
+        end,
+    },
 
-  -- All NvChad plugins are lazy-loaded by default
-  -- For a plugin to be loaded, you will need to set either `ft`, `cmd`, `keys`, `event`, or set `lazy = false`
-  -- If you want a plugin to load on startup, add `lazy = false` to a plugin spec, for example
-  -- {
-  --   "mg979/vim-visual-multi",
-  --   lazy = false,
-  -- }
+    { "tpope/vim-fugitive", lazy = false },
+    { "tpope/vim-rhubarb", lazy = false },
+    {
+        "alexghergh/nvim-tmux-navigation",
+        lazy = false,
+        config = true,
+        opts = {
+            disable_when_zoomed = true,
+            keybindings = {
+                left = "<A-h>",
+                down = "<A-j>",
+                up = "<A-k>",
+                right = "<A-l>",
+            },
+        },
+    },
+
+    -- See https://github.com/zbirenbaum/copilot-cmp for setup
+    {
+        "zbirenbaum/copilot.lua",
+        lazy = false,
+        config = function()
+            require("copilot").setup({
+                suggestion = { enabled = false },
+                panel = { enabled = false },
+            })
+        end,
+    },
+    {
+        "zbirenbaum/copilot-cmp",
+        config = function()
+            require("copilot_cmp").setup()
+        end,
+    },
+
+    {
+        "ledger/vim-ledger",
+        event = "BufEnter *.ledger",
+        init = function()
+            vim.api.nvim_create_autocmd({ "BufEnter" }, {
+                pattern = { "*.ledger" },
+                callback = function()
+                    vim.keymap.set("n", "<leader>le", function()
+                        local expr = vim.fn.getline(".")
+                        vim.cmd(".delete")
+                        vim.cmd("w")
+                        local cmd = string.format("ledger entry %s", expr)
+                        local output = vim.fn.system(cmd)
+                        vim.fn.setreg("", output, "c")
+                        vim.cmd("put")
+                    end)
+                    vim.keymap.set("n", "<leader>fm", function()
+                        vim.cmd("LedgerAlignBuffer")
+                    end, { buffer = 0 })
+                end,
+            })
+        end,
+    },
+
+    -- To make a plugin not be loaded
+    -- {
+    --   "NvChad/nvim-colorizer.lua",
+    --   enabled = false
+    -- },
+
+    -- All NvChad plugins are lazy-loaded by default
+    -- For a plugin to be loaded, you will need to set either `ft`, `cmd`, `keys`, `event`, or set `lazy = false`
+    -- If you want a plugin to load on startup, add `lazy = false` to a plugin spec, for example
+    -- {
+    --   "mg979/vim-visual-multi",
+    --   lazy = false,
+    -- }
 }
 
 return plugins
