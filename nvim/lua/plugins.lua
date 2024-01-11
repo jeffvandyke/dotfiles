@@ -1,3 +1,4 @@
+---@type LazySpec
 return {
     ----------------------------------------------------------------------------
     -- Shared dependency
@@ -43,8 +44,8 @@ return {
     },
     {
         "norcalli/nvim-colorizer.lua",
-        config = {
-            "*" -- Highlight all files
+        opts = {
+            "*" -- Highlight color within all files
         }
     },
     {
@@ -81,15 +82,15 @@ return {
             { "<leader>fs", "<cmd>Telescope vim_options<cr>", desc = "Telescope vim_options" },
             { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find files" },
             { "<leader>fo", "<cmd>Telescope oldfiles<cr>", desc = "Find oldfiles" },
-            { "<leader>fw", "<cmd>Telescope live_grep<cr>",  desc = "Live grep" },
-            { "<leader>fb", "<cmd>Telescope buffers<cr>",    desc = "Find buffers" },
-            { "<leader>fh", "<cmd>Telescope help_tags<cr>",  desc = "find help tags" },
-            { "<leader>gf", "<cmd>Telescope git_files<cr>",  desc = "Telescope Git Files" },
-            { "<leader>gh", "<cmd>Telescope git_stash<cr>",  desc = "Telescope Git Stash" },
-            { "<leader>gs", "<cmd>Telescope git_status<cr>",  desc = "Telescope Git Status" },
-            { "<leader>gc", "<cmd>Telescope git_commits<cr>",  desc = "Telescope Git Commits" },
-            { "<leader>gl", "<cmd>Telescope git_bcommits<cr>",  desc = "Telescope Git Buffer Commits (log)" },
-            { "<leader>gb", "<cmd>Telescope git_branches<cr>",  desc = "Telescope Git Branches" },
+            { "<leader>fw", "<cmd>Telescope live_grep<cr>", desc = "Live grep" },
+            { "<leader>fb", "<cmd>Telescope buffers<cr>", desc = "Find buffers" },
+            { "<leader>fh", "<cmd>Telescope help_tags<cr>", desc = "find help tags" },
+            { "<leader>gf", "<cmd>Telescope git_files<cr>", desc = "Telescope Git Files" },
+            { "<leader>gh", "<cmd>Telescope git_stash<cr>", desc = "Telescope Git Stash" },
+            { "<leader>gs", "<cmd>Telescope git_status<cr>", desc = "Telescope Git Status" },
+            { "<leader>gc", "<cmd>Telescope git_commits<cr>", desc = "Telescope Git Commits" },
+            { "<leader>gl", "<cmd>Telescope git_bcommits<cr>", desc = "Telescope Git Buffer Commits (log)" },
+            { "<leader>gb", "<cmd>Telescope git_branches<cr>", desc = "Telescope Git Branches" },
         },
     },
 
@@ -127,8 +128,10 @@ return {
                 -- Actions
                 map('n', '<leader>hs', gs.stage_hunk, { desc = "GS Stage hunk" })
                 map('n', '<leader>hr', gs.reset_hunk, { desc = "GS Reset hunk" })
-                map('v', '<leader>hs', function() gs.stage_hunk { vim.fn.line('.'), vim.fn.line('v') } end, { desc = "GS Stage Hunk (v)" })
-                map('v', '<leader>hr', function() gs.reset_hunk { vim.fn.line('.'), vim.fn.line('v') } end, { desc = "GS Reset Hunk (v)" })
+                map('v', '<leader>hs', function() gs.stage_hunk { vim.fn.line('.'), vim.fn.line('v') } end,
+                    { desc = "GS Stage Hunk (v)" })
+                map('v', '<leader>hr', function() gs.reset_hunk { vim.fn.line('.'), vim.fn.line('v') } end,
+                    { desc = "GS Reset Hunk (v)" })
                 map('n', '<leader>hS', gs.stage_buffer, { desc = "GS Stage buffer" })
                 map('n', '<leader>hu', gs.undo_stage_hunk, { desc = "GS Undo stage hunk" })
                 map('n', '<leader>hR', gs.reset_buffer, { desc = "GS Reset buffer" })
@@ -160,6 +163,53 @@ return {
     "nvim-tree/nvim-web-devicons",
 
     ----------------------------------------------------------------------------
+    -- Treesitter
+    ----------------------------------------------------------------------------
+    {
+        "nvim-treesitter/nvim-treesitter",
+        build = ":TSUpdate",
+        config = function()
+            local configs = require("nvim-treesitter.configs")
+            configs.setup({
+                ensure_installed = "all",
+                highlight = { enable = true },
+                indent = { enable = true },
+                incremental_selection = { enable = true },
+            })
+        end,
+    },
+    {
+        "nvim-treesitter/nvim-treesitter-textobjects",
+        config = function()
+            require 'nvim-treesitter.configs'.setup {
+                textobjects = {
+                    select = {
+                        enable = true,
+                        keymaps = {
+                            -- You can use the capture groups defined in textobjects.scm
+                            ["af"] = "@function.outer",
+                            ["if"] = "@function.inner",
+                            ["ac"] = "@class.outer",
+                            -- you can optionally set descriptions to the mappings (used in the desc parameter of nvim_buf_set_keymap
+                            ["ic"] = { query = "@class.inner", desc = "Select inner part of a class region" },
+                        }
+                    }
+                }
+            }
+        end
+    },
+    {
+        "nvim-treesitter/nvim-treesitter-context",
+        opts = {
+            enable = true,
+            mode = "cursor",
+            -- max_lines = 3,
+            trim_scope = 'outer',
+            separator = '-',
+        },
+    },
+
+    ----------------------------------------------------------------------------
     -- LSP - Language Server Protocol
     ----------------------------------------------------------------------------
     {
@@ -187,19 +237,19 @@ return {
                 },
             })
             require('mason-lspconfig').setup({
-                    ensure_installed = {
-                        "lua_ls",
-                        "rust_analyzer",
-                        "ruby_ls",
-                        "rubocop",
-                        "sorbet",
-                        "tsserver",
-                        "eslint",
-                        "tailwindcss",
-                        "cssls",
-                        "pylsp",
-                        "terraformls",
-                    },
+                ensure_installed = {
+                    "lua_ls",
+                    "rust_analyzer",
+                    "ruby_ls",
+                    "rubocop",
+                    "sorbet",
+                    "tsserver",
+                    "eslint",
+                    "tailwindcss",
+                    "cssls",
+                    "pylsp",
+                    "terraformls",
+                },
             })
 
             local lspconfig = require('lspconfig')

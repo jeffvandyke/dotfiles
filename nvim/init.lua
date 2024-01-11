@@ -44,8 +44,6 @@ vim.api.nvim_create_autocmd({ "FocusLost", "BufLeave" }, {
     command = ":silent! update",
 })
 
-
-
 -- Lazy.nvim bootstrap - see https://github.com/folke/lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -66,7 +64,9 @@ vim.opt.rtp:prepend(lazypath)
 -- vim.g.loaded_netrwPlugin = 1
 
 if not vim.g.lazy_did_setup then
-    require("lazy").setup("plugins")
+    require("lazy").setup("plugins", {
+        change_detection = { notify = false },
+    })
 end
 --[[
 ./lua/plugins.lua ]]
