@@ -172,6 +172,7 @@ return {
             local configs = require("nvim-treesitter.configs")
             configs.setup({
                 ensure_installed = "all",
+                ignore_install = { "smali", "scfg" },
                 highlight = { enable = true },
                 indent = { enable = true },
                 incremental_selection = { enable = true },
@@ -181,7 +182,7 @@ return {
     {
         "nvim-treesitter/nvim-treesitter-textobjects",
         config = function()
-            require 'nvim-treesitter.configs'.setup {
+            require 'nvim-treesitter.configs'.setup({
                 textobjects = {
                     select = {
                         enable = true,
@@ -195,7 +196,7 @@ return {
                         }
                     }
                 }
-            }
+            })
         end
     },
     {
