@@ -1,5 +1,4 @@
 -- TODO: status line
--- TODO: theme (...maybe hold off)
 
 local opt = vim.opt
 vim.g.mapleader = " "

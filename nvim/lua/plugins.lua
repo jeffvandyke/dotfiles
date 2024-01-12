@@ -13,7 +13,7 @@ return {
 	"tpope/vim-commentary",
 	{
 		"kylechui/nvim-surround",
-		version = "*", -- Use for stability; omit to use `main` branch for the latest features
+		version = "*",
 		event = "VeryLazy",
 		config = true,
 	},
@@ -26,7 +26,6 @@ return {
 		lazy = false, -- make sure we load this during startup if it is your main colorscheme
 		priority = 1000, -- make sure to load this before all the other start plugins
 		config = function()
-			-- load the colorscheme here
 			vim.cmd([[colorscheme tokyonight]])
 		end,
 	},
@@ -128,7 +127,11 @@ return {
 	----------------------------------------------------------------------------
 	{
 		"nvim-tree/nvim-tree.lua",
-		config = true,
+		opts = {
+			update_focused_file = {
+				enable = true,
+			},
+		},
 		keys = {
 			-- { "<Leader>e", "<cmd> NvimTreeFindFile <CR>" },
 			-- { "<C-n>", "<cmd> NvimTreeToggle <CR>" },
@@ -219,22 +222,31 @@ return {
 				"nvim-telescope/telescope-fzf-native.nvim",
 				build = "make",
 			},
-			"xiyaowong/telescope-emoji.nvim",
+			"nvim-telescope/telescope-symbols.nvim",
+		},
+		config = function(_, opts)
+			require("telescope").setup(opts)
+			require("telescope").load_extension("fzf")
+			require("telescope").load_extension("aerial")
+		end,
+		opts = {
+			pickers = {
+				colorscheme = {
+					enable_preview = true,
+				},
+			},
 		},
 		keys = {
-			{ "<leader>fT", "<cmd>Telescope<cr>", desc = "Open Telescope" },
-			{ "<leader>fe", "<cmd>Telescope emoji<cr>", desc = "Find emoji! 😄" },
+			{ "<leader>ts", "<cmd>Telescope<cr>", desc = "Open Telescope" },
+			{ "<leader>fd", "<cmd>Telescope diagnostics<cr>", desc = "Open diagnostics" },
+			{ "<leader>fe", "<cmd>Telescope symbols<cr>", desc = "Find symbols/emojis" },
 			{ "<leader>fs", "<cmd>Telescope vim_options<cr>", desc = "Telescope vim_options" },
 			{ "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find files" },
+			{ "<leader>fa", "<cmd>Telescope find_files no_ignore=true hidden=true<cr>", desc = "Find all files" },
 			{ "<leader>fo", "<cmd>Telescope oldfiles<cr>", desc = "Find oldfiles" },
+			{ "<leader>fk", "<cmd>Telescope keymaps<cr>", desc = "View keymaps" },
 			{ "<leader>fw", "<cmd>Telescope live_grep<cr>", desc = "Live grep" },
-			{
-				"<leader>fb",
-				function()
-					require("telescope.builtin").current_buffer_fuzzy_find()
-				end,
-				desc = "Find in current buffer",
-			},
+			{ "<leader>fb", "<cmd>Telescope current_buffer_fuzzy_find<cr>", desc = "Find in current buffer" },
 			{ "<leader>fh", "<cmd>Telescope help_tags<cr>", desc = "find help tags" },
 			{ "<leader>ft", "<cmd>Telescope aerial<cr>", desc = "find aerial symbols/tags" },
 			{ "<leader>gf", "<cmd>Telescope git_files<cr>", desc = "Telescope Git Files" },
@@ -244,10 +256,6 @@ return {
 			{ "<leader>gl", "<cmd>Telescope git_bcommits<cr>", desc = "Telescope Git Buffer Commits (log)" },
 			{ "<leader>gb", "<cmd>Telescope git_branches<cr>", desc = "Telescope Git Branches" },
 		},
-		config = function()
-			require("telescope").load_extension("fzf")
-			require("telescope").load_extension("aerial")
-		end,
 	},
 
 	----------------------------------------------------------------------------
@@ -274,6 +282,7 @@ return {
 		config = function()
 			require("mason").setup({
 				ensure_installed = {
+					"black",
 					"prettier",
 				},
 			})
@@ -290,6 +299,7 @@ return {
 					"cssls",
 					"pylsp",
 					"terraformls",
+					"phpactor",
 				},
 			})
 
@@ -299,7 +309,7 @@ return {
 			vim.keymap.set("n", "<space>d", vim.diagnostic.open_float, { desc = "LSP diagnostic open float" })
 			vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "LSP Goto prev diagnostic" })
 			vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "LSP Goto next diagnostic" })
-			vim.keymap.set("n", "<space>q", vim.diagnostic.setloclist, { desc = "LSP diagnostic to location list" })
+			vim.keymap.set("n", "<space>lq", vim.diagnostic.setloclist, { desc = "LSP diagnostic to location list" })
 
 			-- TMP until Mason / other plugins
 			lspconfig.lua_ls.setup({
@@ -321,6 +331,7 @@ return {
 			lspconfig.cssls.setup({})
 			lspconfig.pylsp.setup({})
 			lspconfig.terraformls.setup({})
+			lspconfig.phpactor.setup({})
 
 			-- Use LspAttach autocommand to only map the following keys
 			-- after the language server attaches to the current buffer
@@ -386,9 +397,7 @@ return {
 						vim.lsp.buf.code_action,
 						{ buffer = ev.buf, desc = "LSP Code Action" }
 					)
-					-- vim.keymap.set('n', '<leader>lf', function()
-					--     vim.lsp.buf.format { async = true }
-					-- end, { buffer = ev.buf, desc = "LSP Format" })
+					-- NOTE - using conform.nvim for formatting, with LSP fallback
 				end,
 			})
 		end,
@@ -425,7 +434,7 @@ return {
 					lsp_fallback = true,
 					async = false,
 				})
-			end)
+			end, { desc = "Format file" })
 		end,
 	},
 
@@ -450,12 +459,6 @@ return {
 			{ "<Leader>cc", ":CopilotChat " },
 		},
 	},
-
-	-- {
-	--     "neovim/nvim-lspconfig",
-	--     event = "VeryLazy",
-	--     config = true
-	-- },
 
 	----------------------------------------------------------------------------
 	-- CMP - autocomplete
@@ -495,6 +498,7 @@ return {
 				},
 				sources = {
 					{ name = "copilot", group_index = 2 },
+					{ name = "luasnip" },
 					{ name = "nvim_lsp" },
 					{ name = "buffer" },
 					{ name = "nvim_lua" },
