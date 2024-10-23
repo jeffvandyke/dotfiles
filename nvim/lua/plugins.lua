@@ -18,6 +18,8 @@ return {
 		config = true,
 	},
 
+    "LunarVim/bigfile.nvim",
+
 	----------------------------------------------------------------------------
 	-- Miscellanous
 	----------------------------------------------------------------------------
@@ -130,6 +132,9 @@ return {
 		opts = {
 			update_focused_file = {
 				enable = true,
+			},
+			view = {
+				width = 40,
 			},
 		},
 		keys = {
@@ -290,16 +295,16 @@ return {
 				ensure_installed = {
 					"lua_ls",
 					"rust_analyzer",
-					"ruby_ls",
+					"ruby_lsp",
 					"rubocop",
 					"sorbet",
-					"tsserver",
+					"ts_ls",
 					"eslint",
 					"tailwindcss",
 					"cssls",
 					"pylsp",
 					"terraformls",
-					"phpactor",
+					-- "phpactor",
 				},
 			})
 
@@ -322,10 +327,10 @@ return {
 				},
 			})
 			lspconfig.rust_analyzer.setup({})
-			lspconfig.ruby_ls.setup({})
+			lspconfig.ruby_lsp.setup({})
 			lspconfig.rubocop.setup({})
 			lspconfig.sorbet.setup({})
-			lspconfig.tsserver.setup({})
+			lspconfig.ts_ls.setup({})
 			lspconfig.eslint.setup({})
 			lspconfig.tailwindcss.setup({})
 			lspconfig.cssls.setup({})
@@ -345,12 +350,9 @@ return {
 					-- See `:help vim.lsp.*` for documentation on any of the below functions
 					vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = ev.buf, desc = "LSP Definition" })
 					vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = ev.buf, desc = "LSP Hover" })
-					vim.keymap.set(
-						"n",
-						"gr",
-						require("telescope.builtin").lsp_references,
-						{ buffer = ev.buf, desc = "LSP References" }
-					)
+					vim.keymap.set("n", "gr", function()
+						require("telescope.builtin").lsp_references({ show_line = false })
+					end, { buffer = ev.buf, desc = "LSP References" })
 					vim.keymap.set(
 						"n",
 						"<leader>lt",
@@ -422,6 +424,7 @@ return {
 					css = { "prettier" },
 					html = { "prettier" },
 					json = { "prettier" },
+					jsonc = { "prettier" },
 					yaml = { "prettier" },
 					markdown = { "prettier" },
 					graphql = { "prettier" },
@@ -438,9 +441,9 @@ return {
 		end,
 	},
 
-	----------------------------------------------------------------------------
-	-- Copilot tooling
-	----------------------------------------------------------------------------
+	------------------------------------------------------------------------------
+	---- Copilot tooling
+	------------------------------------------------------------------------------
 	{
 		"zbirenbaum/copilot.lua",
 		-- See https://github.com/zbirenbaum/copilot-cmp for necessary setup
@@ -451,14 +454,14 @@ return {
 			panel = { enabled = false },
 		},
 	},
-	{
-		-- NOTE: see https://github.com/gptlang/CopilotChat.nvim for setup instruction
-		"gptlang/CopilotChat.nvim",
-		lazy = false,
-		keys = {
-			{ "<Leader>cc", ":CopilotChat " },
-		},
-	},
+	--{
+	--	-- NOTE: see https://github.com/gptlang/CopilotChat.nvim for setup instruction
+	--	"gptlang/CopilotChat.nvim",
+	--	lazy = false,
+	--	keys = {
+	--		{ "<Leader>cc", ":CopilotChat " },
+	--	},
+	--},
 
 	----------------------------------------------------------------------------
 	-- CMP - autocomplete

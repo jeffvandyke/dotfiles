@@ -22,6 +22,7 @@ opt.showbreak = "▶▶━┫"
 opt.inccommand = "nosplit"
 
 vim.keymap.set("n", "ZW", ":w<CR>")
+vim.keymap.set("n", "<leader>x", ":bd<CR>")
 
 opt.swapfile = false
 
