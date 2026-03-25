@@ -25,6 +25,9 @@ opt.inccommand = "nosplit"
 
 opt.grepprg = "rg --vimgrep --smart-case"
 vim.cmd("cnoreabbrev rg grep")
+vim.cmd("cnoreabbrev lrg lgrep")
+vim.api.nvim_create_autocmd("QuickFixCmdPost", { pattern = "grep",  command = "copen" })
+vim.api.nvim_create_autocmd("QuickFixCmdPost", { pattern = "lgrep", command = "lopen" })
 
 vim.keymap.set("n", "ZW", ":w<CR>")
 vim.keymap.set("n", "<leader>x", ":bd<CR>")
