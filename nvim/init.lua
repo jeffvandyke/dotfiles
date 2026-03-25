@@ -77,5 +77,11 @@ if not vim.g.lazy_did_setup then
 		change_detection = { notify = false },
 	})
 end
+
+-- Join/split lines using ^A as reversible separator
+vim.keymap.set("n", "<leader>[j", ":%s/\\n/\x01/g<CR>:noh<CR>")
+vim.keymap.set("v", "<leader>[j", ":s/\\n/\x01/g<CR>:noh<CR>")
+vim.keymap.set("n", "<leader>]j", ":%s/\x01/\\r/g<CR>")
+vim.keymap.set("v", "<leader>]j", ":s/\x01/\\r/g<CR>")
 --[[
 ./lua/plugins.lua ]]
