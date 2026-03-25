@@ -24,8 +24,8 @@ opt.showbreak = "▶▶━┫"
 opt.inccommand = "nosplit"
 
 opt.grepprg = "rg --vimgrep --smart-case"
-vim.cmd("cnoreabbrev rg grep")
-vim.cmd("cnoreabbrev lrg lgrep")
+vim.cmd("cnoreabbrev rg silent grep")
+vim.cmd("cnoreabbrev lrg silent lgrep")
 vim.api.nvim_create_autocmd("QuickFixCmdPost", { pattern = "grep",  command = "copen" })
 vim.api.nvim_create_autocmd("QuickFixCmdPost", { pattern = "lgrep", command = "lopen" })
 
