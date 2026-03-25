@@ -1,4 +1,4 @@
--- TODO: status line
+-- TODO: status line (lualine.nvim)
 
 local opt = vim.opt
 vim.g.mapleader = " "
@@ -11,6 +11,8 @@ opt.cursorlineopt = "both"
 opt.scrolloff = 2
 opt.termguicolors = true
 opt.background = "light"
+opt.signcolumn = "yes"
+opt.updatetime = 250
 
 opt.tabstop = 4
 opt.shiftwidth = 4
@@ -20,6 +22,9 @@ opt.wrap = true
 opt.linebreak = true
 opt.showbreak = "▶▶━┫"
 opt.inccommand = "nosplit"
+
+opt.grepprg = "rg --vimgrep --smart-case"
+vim.cmd("cnoreabbrev rg grep")
 
 vim.keymap.set("n", "ZW", ":w<CR>")
 vim.keymap.set("n", "<leader>x", ":bd<CR>")
@@ -31,7 +36,7 @@ vim.api.nvim_create_autocmd({ "VimResized" }, {
 	command = "wincmd =",
 })
 
-vim.keymap.set("n", "gx", [[:silent! execute '!open ' . shellescape(expand('<cfile>'), 1)<CR>]])
+-- gx: use Neovim 0.10+ built-in vim.ui.open() which calls xdg-open on Linux
 
 -- Instantly save and load
 opt.autoread = true
@@ -47,7 +52,7 @@ vim.api.nvim_create_autocmd({ "FocusLost", "BufLeave" }, {
 
 -- Lazy.nvim bootstrap - see https://github.com/folke/lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
+if not vim.uv.fs_stat(lazypath) then
 	vim.fn.system({
 		"git",
 		"clone",
