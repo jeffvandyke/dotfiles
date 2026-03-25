@@ -10,7 +10,7 @@ return {
 	----------------------------------------------------------------------------
 	"tpope/vim-unimpaired",
 	"tpope/vim-abolish",
-	"tpope/vim-commentary",
+	-- vim-commentary removed: Neovim 0.10+ has built-in gc/gcc commenting
 	{
 		"kylechui/nvim-surround",
 		version = "*",
@@ -18,7 +18,8 @@ return {
 		config = true,
 	},
 
-    "LunarVim/bigfile.nvim",
+	-- Prevents heavy plugins (treesitter, LSP etc.) from loading on large files
+	"LunarVim/bigfile.nvim",
 
 	----------------------------------------------------------------------------
 	-- Miscellanous
@@ -44,7 +45,7 @@ return {
 		},
 	},
 	{
-		"norcalli/nvim-colorizer.lua",
+		"catgoose/nvim-colorizer.lua",
 		opts = {
 			"*", -- Highlight color within all files
 		},
@@ -138,8 +139,6 @@ return {
 			},
 		},
 		keys = {
-			-- { "<Leader>e", "<cmd> NvimTreeFindFile <CR>" },
-			-- { "<C-n>", "<cmd> NvimTreeToggle <CR>" },
 			{ "<Leader>e", "<cmd> NvimTreeFindFile! <CR>", { desc = "Nvim tree find file" } },
 		},
 	},
@@ -154,8 +153,28 @@ return {
 		config = function()
 			local configs = require("nvim-treesitter.configs")
 			configs.setup({
-				ensure_installed = "all",
-				ignore_install = { "smali", "scfg", "hoon" },
+				ensure_installed = {
+					-- Languages matching active LSP servers
+					"lua", "rust", "ruby", "javascript", "typescript",
+					"tsx", "css", "html", "python", "terraform", "hcl", "php",
+					-- Web / config formats
+					"json", "jsonc", "yaml", "toml", "markdown", "markdown_inline",
+					"graphql", "svelte",
+					-- Shell / tooling
+					"bash", "dockerfile", "regex",
+					-- Neovim / editor
+					"vim", "vimdoc", "query",
+					-- Git
+					"gitignore", "gitcommit", "git_rebase",
+					-- C (required by several parsers internally)
+					"c",
+					-- Embedded / hardware development
+					"cpp", "asm", "cmake", "make",
+					"devicetree",  -- .dts/.dtsi kernel device trees
+					"verilog",     -- HDL (Verilog/SystemVerilog)
+					"vhdl",        -- HDL (VHDL)
+					"tcl",         -- Xilinx/Vivado tooling
+				},
 				highlight = { enable = true },
 				indent = { enable = true },
 				incremental_selection = { enable = true },
@@ -170,11 +189,9 @@ return {
 					select = {
 						enable = true,
 						keymaps = {
-							-- You can use the capture groups defined in textobjects.scm
 							["af"] = "@function.outer",
 							["if"] = "@function.inner",
 							["ac"] = "@class.outer",
-							-- you can optionally set descriptions to the mappings (used in the desc parameter of nvim_buf_set_keymap
 							["ic"] = { query = "@class.inner", desc = "Select inner part of a class region" },
 						},
 					},
@@ -187,7 +204,6 @@ return {
 		opts = {
 			enable = true,
 			mode = "cursor",
-			-- max_lines = 3,
 			trim_scope = "outer",
 			separator = "-",
 		},
@@ -195,15 +211,7 @@ return {
 	{
 		"stevearc/aerial.nvim",
 		config = function()
-			require("aerial").setup({
-				-- -- optionally use on_attach to set keymaps when aerial has attached to a buffer
-				-- on_attach = function(bufnr)
-				--     -- Jump forwards/backwards with '{' and '}'
-				--     vim.keymap.set("n", "<Leader>{", "<cmd>AerialPrev<CR>", { buffer = bufnr })
-				--     vim.keymap.set("n", "<Leader>}", "<cmd>AerialNext<CR>", { buffer = bufnr })
-				-- end,
-			})
-			-- You probably also want to set a keymap to toggle aerial
+			require("aerial").setup({})
 			vim.keymap.set("n", "<leader>o", "<cmd>AerialOpen<CR>")
 		end,
 	},
@@ -211,13 +219,6 @@ return {
 	----------------------------------------------------------------------------
 	-- Multi-file navigation | Telescope
 	----------------------------------------------------------------------------
-	{
-		"mileszs/ack.vim",
-		init = function()
-			vim.g.ackprg = "rg --vimgrep"
-			vim.keymap.set("n", "<leader>a", ":Ack! ")
-		end,
-	},
 	{
 		"nvim-telescope/telescope.nvim",
 		branch = "0.1.x",
@@ -270,8 +271,13 @@ return {
 		"neovim/nvim-lspconfig",
 		dependencies = {
 			{
-				"folke/neodev.nvim",
-				opts = {},
+				"folke/lazydev.nvim",
+				ft = "lua",
+				opts = {
+					library = {
+						{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
+					},
+				},
 			},
 			{
 				"folke/neoconf.nvim",
@@ -285,12 +291,9 @@ return {
 			},
 		},
 		config = function()
-			require("mason").setup({
-				ensure_installed = {
-					"black",
-					"prettier",
-				},
-			})
+			require("mason").setup({})
+			-- Note: mason.setup() doesn't support ensure_installed for formatters/linters.
+			-- Install manually once with :MasonInstall black prettier stylua isort
 			require("mason-lspconfig").setup({
 				ensure_installed = {
 					"lua_ls",
@@ -308,16 +311,11 @@ return {
 				},
 			})
 
-			local lspconfig = require("lspconfig")
-			-- Global mappings.
-			-- See `:help vim.diagnostic.*` for documentation on any of the below functions
-			vim.keymap.set("n", "<space>d", vim.diagnostic.open_float, { desc = "LSP diagnostic open float" })
-			vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "LSP Goto prev diagnostic" })
-			vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "LSP Goto next diagnostic" })
-			vim.keymap.set("n", "<space>lq", vim.diagnostic.setloclist, { desc = "LSP diagnostic to location list" })
+			-- Neovim 0.11 native LSP API (replaces require('lspconfig').server.setup())
+			-- nvim-lspconfig provides server configs via runtimepath; vim.lsp.enable() activates them.
 
-			-- TMP until Mason / other plugins
-			lspconfig.lua_ls.setup({
+			-- Per-server settings overrides
+			vim.lsp.config("lua_ls", {
 				settings = {
 					Lua = {
 						completion = {
@@ -326,80 +324,47 @@ return {
 					},
 				},
 			})
-			lspconfig.rust_analyzer.setup({})
-			lspconfig.ruby_lsp.setup({})
-			lspconfig.rubocop.setup({})
-			lspconfig.sorbet.setup({})
-			lspconfig.ts_ls.setup({})
-			lspconfig.eslint.setup({})
-			lspconfig.tailwindcss.setup({})
-			lspconfig.cssls.setup({})
-			lspconfig.pylsp.setup({})
-			lspconfig.terraformls.setup({})
-			lspconfig.phpactor.setup({})
+
+			-- Enable all servers (default configs supplied by nvim-lspconfig)
+			vim.lsp.enable({
+				"lua_ls", "rust_analyzer", "ruby_lsp", "rubocop", "sorbet",
+				"ts_ls", "eslint", "tailwindcss", "cssls", "pylsp",
+				"terraformls",
+			})
+
+			-- Global diagnostic mappings
+			vim.keymap.set("n", "<space>d", vim.diagnostic.open_float, { desc = "LSP diagnostic open float" })
+			vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "LSP Goto prev diagnostic" })
+			vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "LSP Goto next diagnostic" })
+			vim.keymap.set("n", "<space>lq", vim.diagnostic.setloclist, { desc = "LSP diagnostic to location list" })
 
 			-- Use LspAttach autocommand to only map the following keys
 			-- after the language server attaches to the current buffer
 			vim.api.nvim_create_autocmd("LspAttach", {
 				group = vim.api.nvim_create_augroup("UserLspConfig", {}),
 				callback = function(ev)
-					-- Enable completion triggered by <c-x><c-o>
-					-- CMP: vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
-
-					-- Buffer local mappings.
-					-- See `:help vim.lsp.*` for documentation on any of the below functions
 					vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = ev.buf, desc = "LSP Definition" })
 					vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = ev.buf, desc = "LSP Hover" })
 					vim.keymap.set("n", "gr", function()
 						require("telescope.builtin").lsp_references({ show_line = false })
 					end, { buffer = ev.buf, desc = "LSP References" })
-					vim.keymap.set(
-						"n",
-						"<leader>lt",
-						vim.lsp.buf.type_definition,
-						{ buffer = ev.buf, desc = "LSP Type Definition" }
-					)
-					vim.keymap.set(
-						"n",
-						"<leader>lD",
-						vim.lsp.buf.declaration,
-						{ buffer = ev.buf, desc = "LSP Declaration" }
-					)
-					vim.keymap.set(
-						"n",
-						"<leader>li",
-						vim.lsp.buf.implementation,
-						{ buffer = ev.buf, desc = "LSP Implementation" }
-					)
-					vim.keymap.set(
-						"n",
-						"<C-k>",
-						vim.lsp.buf.signature_help,
-						{ buffer = ev.buf, desc = "LSP Signature Help" }
-					)
-					vim.keymap.set(
-						"n",
-						"<leader>wa",
-						vim.lsp.buf.add_workspace_folder,
-						{ buffer = ev.buf, desc = "LSP Add Workspace Folder" }
-					)
-					vim.keymap.set(
-						"n",
-						"<leader>wr",
-						vim.lsp.buf.remove_workspace_folder,
-						{ buffer = ev.buf, desc = "LSP Remove Workspace Folder" }
-					)
+					vim.keymap.set("n", "<leader>lt", vim.lsp.buf.type_definition, { buffer = ev.buf, desc = "LSP Type Definition" })
+					vim.keymap.set("n", "<leader>lD", vim.lsp.buf.declaration, { buffer = ev.buf, desc = "LSP Declaration" })
+					vim.keymap.set("n", "<leader>li", vim.lsp.buf.implementation, { buffer = ev.buf, desc = "LSP Implementation" })
+					vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, { buffer = ev.buf, desc = "LSP Signature Help" })
+					vim.keymap.set("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, { buffer = ev.buf, desc = "LSP Add Workspace Folder" })
+					vim.keymap.set("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, { buffer = ev.buf, desc = "LSP Remove Workspace Folder" })
 					vim.keymap.set("n", "<leader>wl", function()
 						print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
 					end, { buffer = ev.buf, desc = "LSP List Workspace Folders" })
 					vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { buffer = ev.buf, desc = "LSP Rename" })
-					vim.keymap.set(
-						{ "n", "v" },
-						"<leader>ca",
-						vim.lsp.buf.code_action,
-						{ buffer = ev.buf, desc = "LSP Code Action" }
-					)
+					vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { buffer = ev.buf, desc = "LSP Code Action" })
 					-- NOTE - using conform.nvim for formatting, with LSP fallback
+
+					-- Enable inlay hints (Neovim 0.10+) — e.g. inferred types in Rust
+					if vim.lsp.inlay_hint then
+						vim.lsp.inlay_hint.enable(true, { bufnr = ev.buf })
+					end
 				end,
 			})
 		end,
@@ -434,19 +399,18 @@ return {
 			})
 			vim.keymap.set({ "n", "v" }, "<Leader>lf", function()
 				conform.format({
-					lsp_fallback = true,
+					lsp_format = "fallback",
 					async = false,
 				})
 			end, { desc = "Format file" })
 		end,
 	},
 
-	------------------------------------------------------------------------------
-	---- Copilot tooling
-	------------------------------------------------------------------------------
+	----------------------------------------------------------------------------
+	-- Copilot tooling
+	----------------------------------------------------------------------------
 	{
 		"zbirenbaum/copilot.lua",
-		-- See https://github.com/zbirenbaum/copilot-cmp for necessary setup
 		cmd = "Copilot",
 		event = "InsertEnter",
 		opts = {
@@ -454,14 +418,6 @@ return {
 			panel = { enabled = false },
 		},
 	},
-	--{
-	--	-- NOTE: see https://github.com/gptlang/CopilotChat.nvim for setup instruction
-	--	"gptlang/CopilotChat.nvim",
-	--	lazy = false,
-	--	keys = {
-	--		{ "<Leader>cc", ":CopilotChat " },
-	--	},
-	--},
 
 	----------------------------------------------------------------------------
 	-- CMP - autocomplete
@@ -482,7 +438,6 @@ return {
 				"zbirenbaum/copilot-cmp",
 				config = true,
 			},
-			-- 'hrsh7th/cmp-cmdline',
 		},
 		config = function()
 			local cmp = require("cmp")
@@ -492,7 +447,7 @@ return {
 					["<C-f>"] = cmp.mapping.scroll_docs(4),
 					["<C-Space>"] = cmp.mapping.complete(),
 					["<C-e>"] = cmp.mapping.abort(),
-					["<CR>"] = cmp.mapping.confirm({ select = false }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+					["<CR>"] = cmp.mapping.confirm({ select = false }),
 				}),
 				snippet = {
 					expand = function(args)
@@ -500,6 +455,7 @@ return {
 					end,
 				},
 				sources = {
+					{ name = "lazydev", group_index = 0 },
 					{ name = "copilot", group_index = 2 },
 					{ name = "luasnip" },
 					{ name = "nvim_lsp" },
