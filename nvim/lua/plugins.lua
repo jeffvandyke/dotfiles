@@ -155,7 +155,7 @@ return {
 			local configs = require("nvim-treesitter.configs")
 			configs.setup({
 				ensure_installed = "all",
-				ignore_install = { "smali", "scfg" },
+				ignore_install = { "smali", "scfg", "hoon" },
 				highlight = { enable = true },
 				indent = { enable = true },
 				incremental_selection = { enable = true },

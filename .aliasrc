@@ -17,3 +17,46 @@ alias ytd=youtube-dl
 alias ytfd=youtube-full-dl
 alias rr=ranger
 alias nv=nordvpn
+
+export PATH="$PATH:~/bin"
+export EDITOR=nvim
+export VISUAL=nvim
+alias vi=nvim
+
+# on my linux machines, check for the existence of android studio, and set the CLI-required env vars correctly
+# Check for Android Studio installation and set Android CLI environment variables
+
+# Try common install locations for Android Studio
+if [ -d "$HOME/android-studio" ]; then
+    export ANDROID_STUDIO_HOME="$HOME/android-studio"
+elif [ -d "/opt/android-studio" ]; then
+    export ANDROID_STUDIO_HOME="/opt/android-studio"
+elif [ -d "$HOME/.local/android-studio" ]; then
+    export ANDROID_STUDIO_HOME="$HOME/.local/android-studio"
+fi
+
+# Try to find Android SDK location
+if [ -d "$HOME/Android/Sdk" ]; then
+    export ANDROID_SDK_ROOT="$HOME/Android/Sdk"
+elif [ -d "$HOME/Android/sdk" ]; then
+    export ANDROID_SDK_ROOT="$HOME/Android/sdk"
+elif [ -d "$HOME/resources/Android/Sdk" ]; then
+    export ANDROID_SDK_ROOT="$HOME/resources/Android/Sdk"
+elif [ -d "/opt/android-sdk" ]; then
+    export ANDROID_SDK_ROOT="/opt/android-sdk"
+fi
+
+# Set ANDROID_HOME for legacy tools
+if [ -n "$ANDROID_SDK_ROOT" ]; then
+    export ANDROID_HOME="$ANDROID_SDK_ROOT"
+    export PATH="$ANDROID_SDK_ROOT/platform-tools:$ANDROID_SDK_ROOT/emulator:$ANDROID_SDK_ROOT/tools:$ANDROID_SDK_ROOT/tools/bin:$PATH"
+fi
+
+# Optionally add Android Studio's bin to PATH
+if [ -n "$ANDROID_STUDIO_HOME" ] && [ -d "$ANDROID_STUDIO_HOME/bin" ]; then
+    export PATH="$ANDROID_STUDIO_HOME/bin:$PATH"
+fi
+
+export CAPACITOR_ANDROID_STUDIO_PATH=/usr/bin/android-studio
+
+[ -s /usr/share/nvm/init-nvm.sh ] && source /usr/share/nvm/init-nvm.sh

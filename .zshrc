@@ -83,13 +83,14 @@ plugins=(
     # common-aliases
     docker
     docker-compose
-    # Requires special instructions, see fzf-zsh git repo
+    # Requires fzf installed and https://github.com/unixorn/fzf-zsh-plugin?tab=readme-ov-file#oh-my-zsh to be run
     fzf-zsh-plugin
     git
     git-extras
     npm
     pip
     python
+    poetry # pipx install poetry; https://python-poetry.org/docs/#oh-my-zsh
     sudo
     systemd
     terraform
@@ -163,3 +164,8 @@ export PATH="$PNPM_HOME:$PATH"
 # pnpm end
 
 source ~/.aliasrc
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/home/jeff/.lmstudio/bin"
+# End of LM Studio CLI section
+
