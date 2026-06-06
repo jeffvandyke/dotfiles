@@ -1,0 +1,6 @@
+#!/bin/bash
+set -o pipefail
+tmp=$(mktemp) || exit 1
+find . -type f -not -name "checksums.txt" | LC_ALL=C sort -s | xargs -d '\n' sha256sum | tee "$tmp" \
+    || { rm -f "$tmp"; exit 1; }
+mv "$tmp" checksums.txt

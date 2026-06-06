@@ -1,0 +1,63 @@
+#!/bin/bash
+cksm="./checksums.txt"
+rm_missing=0
+[ "$1" = "--rm" ] && rm_missing=1
+
+# Load existing checksums into an associative array for O(1) per-file lookup
+declare -A checksummed
+if [ -f "$cksm" ]; then
+    while IFS= read -r line; do
+        checksummed["${line:66}"]=1
+    done < "$cksm"
+fi
+
+total=$(find . -type f -not -name "checksums.txt" | wc -l)
+count=0
+cols=$(tput cols 2>/dev/null || echo 80)
+
+find . -type f -not -name "checksums.txt" | LC_ALL=C sort | {
+    trap 'cols=$(tput cols 2>/dev/null || echo 80)' WINCH
+    while IFS= read -r f; do
+        count=$((count + 1))
+        printf -v prefix '[%d/%d] %d%%  ' "$count" "$total" "$((total > 0 ? count * 100 / total : 0))"
+        avail=$((cols - ${#prefix}))
+        if [ "$avail" -le 1 ]; then
+            display=""
+        elif [ "${#f}" -le "$avail" ]; then
+            display="$f"
+        else
+            display="…${f: -$((avail - 1))}"
+        fi
+        printf '\r\033[K%s%s' "$prefix" "$display" >&2
+        [ "${checksummed[$f]+1}" ] || sha256sum "$f"
+    done
+} | tee -a "$cksm"
+printf '\r\033[K' >&2
+
+printf 'Sorting...' >&2
+tmp=$(mktemp) || exit 1
+LC_ALL=C sort -s -k2 "$cksm" > "$tmp" && mv "$tmp" "$cksm"
+printf '\r\033[K' >&2
+
+# Diff checksums.txt paths against current files using comm — O(n) vs O(n²) bash loop
+printf 'Verifying...' >&2
+missing_files=$(LC_ALL=C comm -23 \
+    <(awk '{print substr($0, 67)}' "$cksm" | LC_ALL=C sort) \
+    <(find . -type f -not -name "checksums.txt" | LC_ALL=C sort))
+printf '\r\033[K' >&2
+
+if [ -n "$missing_files" ]; then
+    missing_count=$(echo "$missing_files" | wc -l)
+    echo "$missing_files" | sed 's/^/MISSING: /'
+    if [ "$rm_missing" -eq 1 ]; then
+        tmp=$(mktemp) || exit 1
+        tmp_missing=$(mktemp) || exit 1
+        echo "$missing_files" > "$tmp_missing"
+        awk 'NR==FNR{if (NF) skip[$0]=1; next} !skip[substr($0,67)]' "$tmp_missing" "$cksm" > "$tmp"
+        mv "$tmp" "$cksm"
+        rm -f "$tmp_missing"
+        echo "$missing_count missing file(s) removed from checksums.txt"
+    else
+        echo "$missing_count missing file(s) listed in checksums.txt (use --rm to remove)"
+    fi
+fi
