@@ -10,7 +10,7 @@ opt.cursorline = true
 opt.cursorlineopt = "both"
 opt.scrolloff = 2
 opt.termguicolors = true
-opt.background = "light"
+opt.background = "dark"
 opt.signcolumn = "yes"
 opt.updatetime = 250
 
