@@ -407,19 +407,6 @@ return {
 	},
 
 	----------------------------------------------------------------------------
-	-- Copilot tooling
-	----------------------------------------------------------------------------
-	{
-		"zbirenbaum/copilot.lua",
-		cmd = "Copilot",
-		event = "InsertEnter",
-		opts = {
-			suggestion = { enabled = false },
-			panel = { enabled = false },
-		},
-	},
-
-	----------------------------------------------------------------------------
 	-- CMP - autocomplete
 	----------------------------------------------------------------------------
 	{
@@ -434,10 +421,6 @@ return {
 			"hrsh7th/cmp-buffer",
 			"hrsh7th/cmp-path",
 			"saadparwaiz1/cmp_luasnip",
-			{
-				"zbirenbaum/copilot-cmp",
-				config = true,
-			},
 		},
 		config = function()
 			local cmp = require("cmp")
@@ -456,7 +439,6 @@ return {
 				},
 				sources = {
 					{ name = "lazydev", group_index = 0 },
-					{ name = "copilot", group_index = 2 },
 					{ name = "luasnip" },
 					{ name = "nvim_lsp" },
 					{ name = "buffer" },

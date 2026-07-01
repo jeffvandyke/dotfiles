@@ -1,1 +1,4 @@
 # bare folder, link symbolically to clone location
+
+# macOS
+.DS_Store
