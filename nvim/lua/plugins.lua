@@ -144,70 +144,70 @@ return {
 	},
 	"nvim-tree/nvim-web-devicons",
 
-	----------------------------------------------------------------------------
-	-- Treesitter
-	----------------------------------------------------------------------------
-	{
-		"nvim-treesitter/nvim-treesitter",
-		build = ":TSUpdate",
-		config = function()
-			local configs = require("nvim-treesitter.configs")
-			configs.setup({
-				ensure_installed = {
-					-- Languages matching active LSP servers
-					"lua", "rust", "ruby", "javascript", "typescript",
-					"tsx", "css", "html", "python", "terraform", "hcl", "php",
-					-- Web / config formats
-					"json", "jsonc", "yaml", "toml", "markdown", "markdown_inline",
-					"graphql", "svelte",
-					-- Shell / tooling
-					"bash", "dockerfile", "regex",
-					-- Neovim / editor
-					"vim", "vimdoc", "query",
-					-- Git
-					"gitignore", "gitcommit", "git_rebase",
-					-- C (required by several parsers internally)
-					"c",
-					-- Embedded / hardware development
-					"cpp", "asm", "cmake", "make",
-					"devicetree",  -- .dts/.dtsi kernel device trees
-					"verilog",     -- HDL (Verilog/SystemVerilog)
-					"vhdl",        -- HDL (VHDL)
-					"tcl",         -- Xilinx/Vivado tooling
-				},
-				highlight = { enable = true },
-				indent = { enable = true },
-				incremental_selection = { enable = true },
-			})
-		end,
-	},
-	{
-		"nvim-treesitter/nvim-treesitter-textobjects",
-		config = function()
-			require("nvim-treesitter.configs").setup({
-				textobjects = {
-					select = {
-						enable = true,
-						keymaps = {
-							["af"] = "@function.outer",
-							["if"] = "@function.inner",
-							["ac"] = "@class.outer",
-							["ic"] = { query = "@class.inner", desc = "Select inner part of a class region" },
-						},
-					},
-				},
-			})
-		end,
-	},
-	{
-		"nvim-treesitter/nvim-treesitter-context",
-		opts = {
-			enable = true,
-			mode = "cursor",
-			trim_scope = "outer",
-			separator = "-",
-		},
-	},
+	-- ----------------------------------------------------------------------------
+	-- -- Treesitter
+	-- ----------------------------------------------------------------------------
+	-- {
+	-- 	"nvim-treesitter/nvim-treesitter",
+	-- 	build = ":TSUpdate",
+	-- 	config = function()
+	-- 		local configs = require("nvim-treesitter.configs")
+	-- 		configs.setup({
+	-- 			ensure_installed = {
+	-- 				-- Languages matching active LSP servers
+	-- 				"lua", "rust", "ruby", "javascript", "typescript",
+	-- 				"tsx", "css", "html", "python", "terraform", "hcl", "php",
+	-- 				-- Web / config formats
+	-- 				"json", "jsonc", "yaml", "toml", "markdown", "markdown_inline",
+	-- 				"graphql", "svelte",
+	-- 				-- Shell / tooling
+	-- 				"bash", "dockerfile", "regex",
+	-- 				-- Neovim / editor
+	-- 				"vim", "vimdoc", "query",
+	-- 				-- Git
+	-- 				"gitignore", "gitcommit", "git_rebase",
+	-- 				-- C (required by several parsers internally)
+	-- 				"c",
+	-- 				-- Embedded / hardware development
+	-- 				"cpp", "asm", "cmake", "make",
+	-- 				"devicetree",  -- .dts/.dtsi kernel device trees
+	-- 				"verilog",     -- HDL (Verilog/SystemVerilog)
+	-- 				"vhdl",        -- HDL (VHDL)
+	-- 				"tcl",         -- Xilinx/Vivado tooling
+	-- 			},
+	-- 			highlight = { enable = true },
+	-- 			indent = { enable = true },
+	-- 			incremental_selection = { enable = true },
+	-- 		})
+	-- 	end,
+	-- },
+	-- {
+	-- 	"nvim-treesitter/nvim-treesitter-textobjects",
+	-- 	config = function()
+	-- 		require("nvim-treesitter.configs").setup({
+	-- 			textobjects = {
+	-- 				select = {
+	-- 					enable = true,
+	-- 					keymaps = {
+	-- 						["af"] = "@function.outer",
+	-- 						["if"] = "@function.inner",
+	-- 						["ac"] = "@class.outer",
+	-- 						["ic"] = { query = "@class.inner", desc = "Select inner part of a class region" },
+	-- 					},
+	-- 				},
+	-- 			},
+	-- 		})
+	-- 	end,
+	-- },
+	-- {
+	-- 	"nvim-treesitter/nvim-treesitter-context",
+	-- 	opts = {
+	-- 		enable = true,
+	-- 		mode = "cursor",
+	-- 		trim_scope = "outer",
+	-- 		separator = "-",
+	-- 	},
+	-- },
 	{
 		"stevearc/aerial.nvim",
 		config = function()
@@ -305,7 +305,8 @@ return {
 					"eslint",
 					"tailwindcss",
 					"cssls",
-					"pylsp",
+					"pyright",
+					"ruff",
 					"terraformls",
 					-- "phpactor",
 				},
@@ -325,10 +326,55 @@ return {
 				},
 			})
 
+			-- pyright: type-checking, completion, go-to-def. npm-based install
+			-- (like ts_ls/eslint below), not a mason-managed Python venv, so it's
+			-- unaffected by system Python upgrades (unlike the old pylsp, whose
+			-- venv broke when Manjaro bumped 3.13 -> 3.14).
+			--
+			-- root_dir already resolves to the nearest ancestor with a
+			-- pyproject.toml/setup.py/etc (see root_markers in nvim-lspconfig's
+			-- pyright.lua), which for a repo like trainer/pyproject.toml means
+			-- root_dir is trainer/, not the outer git root. But pyright doesn't
+			-- auto-discover an arbitrary venv there on its own (that's normally
+			-- done by VS Code's Python extension) — so point it at whichever
+			-- common venv dir exists under that root, regardless of how it was
+			-- created (uv, poetry --in-project, plain venv, ...).
+			vim.lsp.config("pyright", {
+				before_init = function(_, config)
+					local root = config.root_dir
+					if not root then
+						return
+					end
+					for _, name in ipairs({ ".venv", "venv", ".env" }) do
+						local python = root .. "/" .. name .. "/bin/python"
+						if vim.uv.fs_stat(python) then
+							-- Mutate config.settings in place (don't reassign the table):
+							-- client.settings (what answers workspace/configuration) is
+							-- captured as this same table reference at client-construction
+							-- time, before before_init runs. Reassigning config.settings to
+							-- a new table here would silently orphan that reference.
+							config.settings = config.settings or {}
+							config.settings.python = vim.tbl_deep_extend("force", config.settings.python or {}, {
+								pythonPath = python,
+							})
+							break
+						end
+					end
+				end,
+			})
+
+			-- ruff: linting only; defer hover to pyright to avoid duplicate/
+			-- conflicting hover popups.
+			vim.lsp.config("ruff", {
+				on_attach = function(client)
+					client.server_capabilities.hoverProvider = false
+				end,
+			})
+
 			-- Enable all servers (default configs supplied by nvim-lspconfig)
 			vim.lsp.enable({
 				"lua_ls", "rust_analyzer", "ruby_lsp", "rubocop", "sorbet",
-				"ts_ls", "eslint", "tailwindcss", "cssls", "pylsp",
+				"ts_ls", "eslint", "tailwindcss", "cssls", "pyright", "ruff",
 				"terraformls",
 			})
 
